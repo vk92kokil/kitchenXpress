@@ -1,0 +1,36 @@
+<div class = "row">
+
+    <div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2">Item Details ({{itemid}})</th>
+                </tr>
+                </thead>
+                <tbody style="text-align: center">
+                <tr>
+                    <td> Item Name</td>
+                    <td>
+                        <input type="text" placeholder="Name" ng-model="item.name">
+                    </td>
+                </tr>
+                <tr>
+                    <td> Description</td>
+                    <td>
+                        <input type="text" placeholder="Description" ng-model="item.desc">
+                    </td>
+                </tr>
+                <tr>
+                    <td> Image url</td>
+                    <td>
+                        <input type="text" placeholder="Image url" ng-model="item.imgurl">
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+
+    </div>
+    <div>
+        <button type="button" ng-click="addClicked()" class="btn btn-block btn-primary">Add</button>
+    </div>
+</div>
