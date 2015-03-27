@@ -39,13 +39,14 @@ app.controller('LoginController',function($scope,$rootScope,$location,$http,$coo
         $scope.getMenu();
     }
 });
-app.controller('MenuController',function($scope,$rootScope,$location,$http){
+app.controller('MenuController',function($scope,$rootScope,$location,$http,$cookieStore){
 
+    $scope.visibility = false;
     $scope.menu = $rootScope.menu;
 
     $scope.addItemClicked = function(){
         $location.path("/addItem");
-    }
+    };
     var postUrl = url+$rootScope.kitchenid+"/menu"
 
     $scope.postItem = function(){
@@ -55,39 +56,48 @@ app.controller('MenuController',function($scope,$rootScope,$location,$http){
         $http.post(postUrl, $rootScope.menu).
             success(function(data, status, headers, config) {
                 console.log("Posted Successfully");
+                $scope.visibility = true;
+
+                var kitchenid = $cookieStore.get("kitchenid");
+                $rootScope.kitchenid = kitchenid;
+
                 $scope.getRefreshedMenu();
+
             }).
             error(function(data, status, headers, config) {
                 window.alert("Error in posting");
             });
-    }
-
+    };
     $scope.getRefreshedMenu = function(){
 
+
         var getUrl = url+$rootScope.kitchenid+"/menu";
+
         $http.get(getUrl).
             success(function(data, status, headers, config) {
                 $rootScope.menu = data;
                 $scope.menu = data;
+                $scope.visibility = false;
             }).
             error(function(data, status, headers, config) {
                 window.alert("Failed to fetch Menu")
             });
-        }
+    };
     $scope.editItem = function(itemId){
-
         $rootScope.currentItemId = itemId;
         $location.path("/edit");
-    }
+    };
     $scope.removeItem = function(itemId){
-        console.log("Before deleting: ",$rootScope.menu);
 
         delete $rootScope.menu.items[itemId];
         delete $scope.menu.items[itemId];
-
-        console.log("After Deleting: ",$rootScope.menu);
-
         $scope.menu = $rootScope.menu;
+    };
+    if(!$scope.menu){
+        var kitchenid = $cookieStore.get("kitchenid");
+        $rootScope.kitchenid = kitchenid;
+        $scope.visibility = true;
+        $scope.getRefreshedMenu();
     }
 });
 app.controller('addItemViewController',function($scope,$rootScope,$location,fileUpload){
@@ -152,10 +162,12 @@ app.controller('mainController',function($rootScope,$cookieStore,$scope,$locatio
     $scope.menuBack = "Back";
 
     $scope.logout = function(){
-
         $rootScope.kitchenid = "";
         $cookieStore.remove("kitchenid");
         $location.path("/login");
+    }
+    $scope.back = function(){
+        $location.path("/menu");
     }
 })
 

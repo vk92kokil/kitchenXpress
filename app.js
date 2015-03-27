@@ -2,7 +2,7 @@
  * Created by vikramaditya on 3/25/15.
  */
 
-var app = angular.module("myApp",['ngRoute','ngCookies','ui.bootstrap','ngMaterial']);
+var app = angular.module("myApp",['ngRoute','ngCookies','ngMaterial']);
 
 app.config(['$routeProvider',function ($routeProvider) {
 
