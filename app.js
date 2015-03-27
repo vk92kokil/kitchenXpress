@@ -2,7 +2,7 @@
  * Created by vikramaditya on 3/25/15.
  */
 
-var app = angular.module("myApp",['ngRoute','ngCookies','ui.bootstrap']);
+var app = angular.module("myApp",['ngRoute','ngCookies','ui.bootstrap','ngMaterial']);
 
 app.config(['$routeProvider',function ($routeProvider) {
 
@@ -18,6 +18,10 @@ app.config(['$routeProvider',function ($routeProvider) {
       when('/login',{
           templateUrl: 'views/login.html',
           controller: 'LoginController'
+    }).
+    when('/edit',{
+          templateUrl: 'views/editItem.html',
+          controller: 'EditController'
     }).
     otherwise({redirectTo: '/login'});
 

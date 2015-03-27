@@ -1,0 +1,46 @@
+<div class = "row">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th colspan="2">Item Details ({{currentItemId}})</th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center">
+            <tr>
+                <td> Item Name</td>
+                <td>
+                    <input type="text" placeholder="Name" ng-model="item.name">
+                </td>
+            </tr>
+            <tr>
+                <td> Description</td>
+                <td>
+                    <input type="text" placeholder="Description" ng-model="item.desc">
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <img ng-src= "{{item.imgurl}}" style="width: 140px; height: 140px;" class="img-thumbnail img-responsive" alt="Responsive image">
+                    <div ng-show = visibility layout="row" layout-sm="column" layout-align="space-around" style = "transform: translate(0%,-180%)">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                </td>
+                <td colspan="1">
+                    <label for="exampleInputFile">Upload Image</label>
+                    <!--<input name="file" style="transform: translate(75%,50%);" id = "exa2mpleInputFile" type="file">-->
+                    <input type="file" file-model="myFile" id = "exampleInputFile" style="transform: translate(75%,50%);"/>
+                    <br>
+                    <br>
+                    <button ng-click="uploadImage()">upload</button>
+                    <!--<input type="text" placeholder="Image url" ng-model="item.imgurl">-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <button type="button" ng-click="edit()" class="btn btn-block btn-primary">OK</button>
+    </div>
+</div>
