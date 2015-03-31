@@ -1,6 +1,4 @@
-
-<form>
-    <!--<div class="form-group">-->
+ <!--<div class="form-group">-->
         <!--<label for="exampleInputEmail1">Email address</label>-->
         <!--<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" ng-model="emailId">-->
     <!--</div>-->
@@ -21,10 +19,33 @@
         <br>
     </div>
     <div>
-        <form>
-            <input ng-click="login('User')" class="col-md-2 btn" type="image" id="user" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png"/>
-            <input ng-click="login('Admin')" class="col-md-2 col-md-push-3 btn" type="image" id="admin" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png"/>
-            <input ng-click="login('Staff')" class="col-md-2 btn" type="image" id="staff" style="border: solid black 1px; float: right" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png"/>
+        <md-card class="btn"  style="width: 128px; height: 128px; float: left">
+            <img ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
+            <br>
+            <br>
+            <h5 style="text-align: center">User</h5>
+        </md-card>
+
+        <md-card class="col-md-2 col-md-push-3 btn" style="width: 128px; height: 128px;">
+            <img ng-click="login('Admin')" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png" alt="Washed Out">
+            <br>
+            <br>
+            <h5 style="text-align: center">Administrator</h5>
+        </md-card>
+
+        <md-card class = "btn" style="width: 128px; height: 128px; float: right;">
+            <img ng-click="login('Staff')" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png" alt="Washed Out">
+            <br>
+            <br>
+            <h5 style="text-align: center">Staff</h5>
+        </md-card>
+
+        <div ng-show="false">
+                <input ng-click="login('User')"  class="col-md-2 btn" type="image" id="user" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png"/>
+                <input ng-click="login('Admin')" class="col-md-2 col-md-push-3 btn" type="image" id="admin" style= "border: solid black 1px;" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png"/>
+                <input ng-click="login('Staff')" class="col-md-2 btn" type="image" id="staff" style="border: solid black 1px; float: right" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png"/>
+        </div>
+
             <!--<br>-->
             <!--<span class="radioValue" ng-init="roleId = 'User';">Login as: <strong> {{ roleId }} </strong></span> </p>-->
             <!--<md-radio-group ng-model = "roleId">-->
@@ -35,7 +56,6 @@
             <!--<br>-->
 
             <!--<button type="submit" class="btn btn-default" ng-click="login(roleId)"> Submit </button>-->
-        </form>
     </div>
 
 </form>
