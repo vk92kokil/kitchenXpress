@@ -11,19 +11,16 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     $scope.userPendingOrder = {};
     $scope.orderId = [];
     $scope.tableNumber = [];
-
     $scope.allCompletedOrder = [];
-
     $scope.showPending = false;
     $scope.userItemCount = 0;
     $scope.userQuantityCount = 0;
     $scope.userAddItem = [];
     $scope.showCart = false;
+
     //$scope.userMenu = tmp_menu; //delete this after testing
 
-    var currentOrder = $cookieStore.get("currentOrder"); //Usr ADD Item
-    var userid = $cookieStore.get("userId");
-    var tableid = $cookieStore.get("tableId");
+    var currentOrder = $cookieStore.get("currentOrder"); //Usr ADD Item, cart order
 
     $scope.getDetail = function(ev,itemid,item) {
 
@@ -67,23 +64,23 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             publish_key: 'pub-c-e14ff346-d55f-47fd-ab96-8012cda81f9d',
             subscribe_key: 'sub-c-4dde67e6-d2fe-11e4-844b-0619f8945a4f'
         });
-
         PUBNUB_demo.subscribe({
             channel: 'Channel1',
             message: function(m){
                 $scope.$apply(function () {
 
-
                     if(m.receiverId == $scope.userId && (m.action == "complete" || m.action == "cancelled")){
 
                         delete $scope.userPendingOrder[m.orderId];
                         $scope.allCompletedOrder.push(m);
+                        $cookieStore.put("userPendingOrder", $scope.userPendingOrder);
+                        $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
 
                     }
                     if(m.senderId == $scope.userId && m.action == "init"){
 
                         $scope.userPendingOrder[m.orderId] = m;
-                        console.log($scope.userPendingOrder);
+                        $cookieStore.put("userPendingOrder", $scope.userPendingOrder);
                     }
                 });
             }
@@ -96,6 +93,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $http.get(getUrl).
             success(function(data, status, headers, config) {
                 $scope.userMenu = data;
+                console.log(data);
             }).
             error(function(data, status, headers, config) {
                 window.alert("Failed to fetch Menu");
@@ -103,32 +101,37 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     };
     $scope.placeUserOrder = function(){
 
-        var current_orderid = Math.floor(Date.now());
-        var order = {
-            "senderId":$scope.userId,
-            "receiverId":"staff",
-            "action":"init",  //init complete, cancelled
-            "orderId": current_orderid.toString(),
-            "tableNumber":$scope.tableId,
-            "items": []
-        };
+        if($scope.userAddItem.length != 0){
+            var current_orderid = Math.floor(Date.now());
+            var order = {
+                "senderId":$scope.userId,
+                "receiverId":"staff",
+                "action":"init",  //init complete, cancelled
+                "orderId": current_orderid.toString(),
+                "tableNumber":$scope.tableId,
+                "items": []
+            };
 
-        //do pubnub publish here
-        $scope.showPending = true;
 
-        //$scope.userPendingOrder.push(angular.copy($scope.userAddItem));
+            //do pubnub publish here
+            $scope.showPending = true;
 
-        order.items =  angular.copy($scope.userAddItem);
+            //$scope.userPendingOrder.push(angular.copy($scope.userAddItem));
+            console.log("uaIII: ",$scope.userAddItem.length);
 
-        $scope.tableNumber.push(order.tableNumber);
+            order.items =  angular.copy($scope.userAddItem);
 
-        PUBNUB_demo.publish({
-           channel: 'Channel1',
-           message: order
-        });
+            $scope.tableNumber.push(order.tableNumber);
 
-        //console.log("upi: ",$scope.userPendingOrder);
-        $scope.emptyCart();
+            PUBNUB_demo.publish({
+                channel: 'Channel1',
+                message: order
+            });
+
+            //console.log("upi: ",$scope.userPendingOrder);
+            $scope.emptyCart();
+        }
+
 
     };
     $scope.emptyCart = function(){
@@ -140,10 +143,22 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $scope.userItemCount = 0;
         $scope.userQuantityCount = 0;
         $scope.showCart = false;
-        var len = $scope.userAddItem.length;
 
+        var len = $scope.userAddItem.length;
         $scope.userAddItem.splice(0,len);
 
+    };
+    $scope.checkPending = function(){
+
+        var pending = $cookieStore.get("userPendingOrder");
+        var completed = $cookieStore.get("allCompletedOrder");
+        if(pending){
+           $scope.showPending = true;
+           $scope.userPendingOrder = pending;
+        }
+        if(completed){
+            $scope.allCompletedOrder = completed;
+        }
     };
     $scope.updateCookie = function(){
 
@@ -152,37 +167,41 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $cookieStore.put("currentQuantityCount", $scope.userQuantityCount);
 
     };
+
     if(currentOrder){
 
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
         $scope.userItemCount = $cookieStore.get("currentItemCount");
         $scope.userQuantityCount = $cookieStore.get("currentQuantityCount");
-        $scope.subscribeChannel();
-        $scope.getDetail();
+
         $scope.getMenu();
+        $scope.getDetail();
+        $scope.subscribeChannel();
+        $scope.checkPending();
 
         console.log("already ordered");
         $scope.userAddItem = currentOrder;
 
         if($scope.userItemCount > 0){
             $scope.showCart = true;
-        }else{$scope.showCart = false;
+        }else{
+            $scope.showCart = false;
         }
     }
     else{
 
-        $scope.getDetail();
-        $scope.subscribeChannel();
-
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
-        $scope.userId = $cookieStore.get("userId");
-        $scope.tableId =  $cookieStore.get("tableId");
+        //$scope.userId = $cookieStore.get("userId");
+        //$scope.tableId =  $cookieStore.get("tableId");
+
         $scope.getMenu();
+        $scope.getDetail();
+        $scope.subscribeChannel();
+        $scope.checkPending();
         $scope.emptyCart();
     }
-
     $scope.showAlert = function(ev,itemid,item) {
         $rootScope.userClickedItem = item;
         $rootScope.userClickedItemid = itemid;
@@ -248,7 +267,6 @@ app.controller('detailsModalController',function($scope,$mdDialog,$rootScope){
 
     };
 });
-
 app.controller('userModalController',function($scope,$mdDialog,$rootScope){
 
     $scope.item = $rootScope.userClickedItem;

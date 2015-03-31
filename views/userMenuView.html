@@ -21,9 +21,6 @@
                 <th>
                     Order
                 </th>
-                <!--<th>-->
-                    <!--Quantity ordered-->
-                <!--</th>-->
             </tr>
         </thead>
 
@@ -170,7 +167,6 @@
                     <strong>{{order.orderId}}</strong>
                 </td>
                 <td>
-
                     <dl ng-repeat="(item,userorder) in order.items">
                         <dt>Item Name : {{userorder.name}}</dt>
                         <dd>Quantity : {{userorder.quantity}}</dd>

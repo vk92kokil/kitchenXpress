@@ -18,26 +18,20 @@
         <input style="text-align: center" class="form-control input-lg" id="inputlg" type="text" placeholder="Enter Kitchen ID" ng-model="kitchenid">
         <br>
     </div>
-    <div>
-        <md-card class="btn"  style="width: 128px; height: 128px; float: left">
-            <img ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
-            <br>
-            <br>
-            <h5 style="text-align: center">User</h5>
+    <div layout="row" layout-margin>
+        <md-card flex flex-order = "1" class="btn">
+            <img class="img-responsive" ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
+            <h2 style="text-align: center">User</h2>
         </md-card>
 
-        <md-card class="col-md-2 col-md-push-3 btn" style="width: 128px; height: 128px;">
-            <img ng-click="login('Admin')" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png" alt="Washed Out">
-            <br>
-            <br>
-            <h5 style="text-align: center">Administrator</h5>
+        <md-card flex flex-order= "2" class="btn">
+            <img class="img-responsive" ng-click="login('Admin')" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png" alt="Washed Out">
+            <h2 style="text-align: center">Administrator</h2>
         </md-card>
 
-        <md-card class = "btn" style="width: 128px; height: 128px; float: right;">
-            <img ng-click="login('Staff')" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png" alt="Washed Out">
-            <br>
-            <br>
-            <h5 style="text-align: center">Staff</h5>
+        <md-card flex flex-order ="3" class="btn">
+            <img class="img-responsive" ng-click="login('Staff')" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png" alt="Washed Out">
+            <h2 style="text-align: center">Staff</h2>
         </md-card>
 
         <div ng-show="false">

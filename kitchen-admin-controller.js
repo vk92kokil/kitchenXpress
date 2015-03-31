@@ -269,6 +269,7 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
         $cookieStore.remove("userId");
         $cookieStore.remove("tableId");
         $cookieStore.remove("kitchenid");
+        $cookieStore.remove("allCompletedOrder");
 
         $location.path("/login");
     };

@@ -6,8 +6,10 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
     $scope.showPending = true;
 
     $scope.allCompletedOrder = [];
-    $scope.allPendingOrder = [];
+    $scope.allPendingOrder = {};
     var current_order;
+    var kitchenid = $cookieStore.get("kitchenid");
+
     $scope.subscribeChannel = function(){
 
         PUBNUB_demo = PUBNUB.init({
@@ -20,22 +22,40 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             message: function(m){
                 $scope.$apply(function () {
                     if(m.action == "complete" || m.action == "cancelled"){
-                        var index = $scope.allPendingOrder.indexOf(current_order);
-                        if(index > -1){
-                            $scope.allPendingOrder.splice(index,1);
-                            $scope.allCompletedOrder.push(m);
-                        }
+
+                        console.log("delete order");
+                        delete $scope.allPendingOrder[m.orderId];
+                        $scope.allCompletedOrder.push(m);
+                        $cookieStore.put("allPendingOrder", $scope.allPendingOrder);
+                        $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
+
+                        //var index = $scope.allPendingOrder.indexOf(current_order);
+                        //if(index > -1){
+                        //    $scope.allPendingOrder.splice(index,1);
+                        //    $scope.allCompletedOrder.push(m);
+                        //}
                     }
                     if(m.action == "init"){
-                        $scope.allPendingOrder.push(m);
+                        $scope.allPendingOrder[m.orderId] = m;
+                        $cookieStore.put("allPendingOrder", $scope.allPendingOrder);
+                        //$scope.allPendingOrder.push(m);
                     }
                 });
             }
         });
     };
+    if(kitchenid){
+        var pendingOrder = $cookieStore.get("allPendingOrder");
+        var completedOrder = $cookieStore.get("allCompletedOrder");
 
-    if($rootScope.kitchenid){
+        if(pendingOrder){
+            $scope.allPendingOrder = pendingOrder;
+        }
+        if(completedOrder){
+            $scope.allCompletedOrder = completedOrder;
+        }
 
+        $rootScope.kitchenid = kitchenid;
         $scope.subscribeChannel();
 
     }else{
@@ -44,7 +64,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
 
     $scope.userOrderCompleted = function (order) {
         current_order = order;
-        var msg = {
+        var sendorder = {
             "senderId":"staff",
             "receiverId":order.senderId,
             "action":"complete",  //init complete, cancelled
@@ -54,8 +74,9 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
         };
         PUBNUB_demo.publish({
             channel: 'Channel1',
-            message: msg
+            message: sendorder
         });
+        console.log("DOne");
     };
     $scope.userOrderCancelled = function (order) {
 
@@ -73,6 +94,5 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             channel: 'Channel1',
             message: sendorder
         });
-        console.log("so ",sendorder);
     };
 });
