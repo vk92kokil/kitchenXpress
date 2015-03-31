@@ -1,3 +1,4 @@
+
 <form>
     <!--<div class="form-group">-->
         <!--<label for="exampleInputEmail1">Email address</label>-->
@@ -14,10 +15,27 @@
     <!--</div>-->
     <!--<button type="submit" class="btn btn-default" ng-click="login(emailId,pass)"> Submit </button>-->
 
-    <div class="form-group">
-        <label for="exampleInputEmail1">Kitchen ID</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Kitchenid" ng-model="kitchenid">
+    <div class="form-group" style="margin-top: 20%">
+        <!--<h4 style="text-align: center"><b>KITCHEN ID</b></h4>-->
+        <input style="text-align: center" class="form-control input-lg" id="inputlg" type="text" placeholder="Enter Kitchen ID" ng-model="kitchenid">
+        <br>
+    </div>
+    <div>
+        <form>
+            <input ng-click="login('User')" class="col-md-2 btn" type="image" id="user" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png"/>
+            <input ng-click="login('Admin')" class="col-md-2 col-md-push-3 btn" type="image" id="admin" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png"/>
+            <input ng-click="login('Staff')" class="col-md-2 btn" type="image" id="staff" style="border: solid black 1px; float: right" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png"/>
+            <!--<br>-->
+            <!--<span class="radioValue" ng-init="roleId = 'User';">Login as: <strong> {{ roleId }} </strong></span> </p>-->
+            <!--<md-radio-group ng-model = "roleId">-->
+                <!--<md-radio-button value="User">User</md-radio-button>-->
+                <!--<md-radio-button value="Admin"> Admin </md-radio-button>-->
+                <!--<md-radio-button value="Staff">Staff</md-radio-button>-->
+            <!--</md-radio-group>-->
+            <!--<br>-->
+
+            <!--<button type="submit" class="btn btn-default" ng-click="login(roleId)"> Submit </button>-->
+        </form>
     </div>
 
-    <button type="submit" class="btn btn-default" ng-click="login()"> Submit </button>
 </form>

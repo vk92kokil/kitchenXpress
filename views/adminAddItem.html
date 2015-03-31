@@ -17,7 +17,7 @@
                 <tr>
                     <td> Description</td>
                     <td>
-                        <input type="text" placeholder="Description" ng-model="item.desc">
+                        <textarea type="text" placeholder="Description" ng-model="item.desc"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -26,26 +26,55 @@
                         <div ng-show = visibility layout="row" layout-sm="column" layout-align="space-around" style = "transform: translate(0%,-180%)">
                             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                         </div>
-
                     </td>
                     <td colspan="1">
-
                         <label for="exampleInputFile">Upload Image</label>
-                        <!--<input name="file" style="transform: translate(75%,50%);" id = "exa2mpleInputFile" type="file">-->
-                        <input type="file" file-model="myFile" id = "exampleInputFile" style="transform: translate(75%,50%);"/>
+                        <div style = "height: 0px; overflow:hidden">
+                            <input type="file" file-model="myFile" id = "exampleInputFile"/>
+                        </div>
+                        <button  class="btn btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
                         <br>
                         <br>
-                        <button ng-click="uploadImage()">upload</button>
-                        <!--<input type="text" placeholder="Image url" ng-model="item.imgurl">-->
+                        <button type="button" class="btn btn-block btn-info"ng-click="uploadImage()">upload</button>
                     </td>
                 </tr>
                 </tbody>
         </table>
 
     </div>
-    <div>
-        <button type="button" ng-click="addClicked()" class="btn btn-block btn-primary">Add</button>
-    </div>
+
+        <div class="col-md-6">
+            <button type="button" ng-click="addClicked()" class="btn btn-block btn-primary">Add</button>
+        </div>
+        <div class="col-md-6">
+            <button type="button" ng-click="cancel()" class="btn btn-block btn-danger">Cancel</button>
+        </div>
 
 </div>
+<script>
+
+</script>
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+        background: transparent;
+        border: none;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: transparent;
+        cursor: inherit;
+        display: block;
+    }
+</style>
 

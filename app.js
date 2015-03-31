@@ -2,27 +2,35 @@
  * Created by vikramaditya on 3/25/15.
  */
 
-var app = angular.module("myApp",['ngRoute','ngCookies','ngMaterial']);
+var app = angular.module("myApp",['ngRoute','ngCookies','ngMaterial','pubnub.angular.service']);
 
 app.config(['$routeProvider',function ($routeProvider) {
 
   $routeProvider.when('/menu', {
 
-    templateUrl: 'views/menuView.html',
+    templateUrl: 'views/adminMenuView.html',
     controller: 'MenuController'
     }).
     when('/addItem', {
-      templateUrl: 'views/addItem.html',
+      templateUrl: 'views/adminAddItem.html',
       controller: 'addItemViewController'
     }).
-      when('/login',{
+    when('/login',{
           templateUrl: 'views/login.html',
-          controller: 'LoginController'
+          controller: 'loginController'
     }).
     when('/edit',{
-          templateUrl: 'views/editItem.html',
+          templateUrl: 'views/adminEditItem.html',
           controller: 'EditController'
     }).
+    when('/userMenu',{
+          templateUrl: 'views/userMenuView.html',
+          controller: 'userMenuController'
+    }).
+    when('/staffMenu',{
+          templateUrl: 'views/staffMenu.html',
+          controller: 'staffMenuController'
+      }).
     otherwise({redirectTo: '/login'});
 
 }]);

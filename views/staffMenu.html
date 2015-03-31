@@ -1,0 +1,124 @@
+<h2 style="text-align: center">
+    Staff Orders List
+</h2>
+<div>
+    <table  class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="5">
+                Pending Orders
+            </th>
+        </tr>
+        </thead>
+        <tbody style="text-align: center;">
+        <tr>
+            <th class="col-md-1">
+
+                Index
+
+            </th>
+
+            <th>
+                OrderId
+            </th>
+            <th>
+                <strong>
+                    Items
+                </strong>
+
+            </th>
+            <th>
+                <strong>
+                    Table Number
+                </strong>
+            </th>
+
+            <th>
+                <strong>
+                    Action
+                </strong>
+            </th>
+
+        </tr>
+
+        <tr ng-repeat="order in allPendingOrder">
+            <td>
+                {{$index+1}}
+            </td>
+            <td>
+                    <strong>{{order.orderId}}</strong>
+            </td>
+            <td>
+                <dl ng-repeat="(item,userorder) in order.items">
+                    <dt>Item Name : {{userorder.name}}</dt>
+                    <dd>Quantity : {{userorder.quantity}}</dd>
+                    <dd>Comments: {{userorder.comments}}</dd>
+                </dl>
+            </td>
+            <td>
+                <strong>Table no: </strong>{{order.tableNumber}}
+            </td>
+            <td>
+                <button ng-click="userOrderCancelled(order)" type="button" class="btn btn-danger" tooltip="Not Available">Not Available</button>
+                <button ng-click="userOrderCompleted(order)"  type="button" class="btn btn-success" tooltip="Order Completed">Done</button>
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- Completed Orders -->
+        <thead>
+        <tr>
+            <th colspan="5">
+                Completed Orders
+            </th>
+        </tr>
+        </thead>
+        <tbody style="text-align: center;">
+        <tr>
+            <th>
+                Index
+            </th>
+            <th>
+                OrderId
+            </th>
+            <th>
+                <strong>
+                    Items
+                </strong>
+
+            </th>
+            <th>
+                <strong>
+                    Table Number
+                </strong>
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+
+        <tr ng-repeat="order in allCompletedOrder">
+            <td>
+                {{$index+1}}
+            </td>
+            <td>
+                <strong>{{order.orderId}}</strong>
+            </td>
+            <td>
+                <dl ng-repeat="(item,userorder) in order.items">
+                    <dt>Item Name : {{userorder.name}}</dt>
+                    <dd>Quantity : {{userorder.quantity}}</dd>
+                    <dd>Comments: {{userorder.comments}}</dd>
+                </dl>
+            </td>
+            <td>
+                <strong>Table no: </strong>{{order.tableNumber}}
+            </td>
+            <td>
+                <p>{{order.action}}</p>
+            </td>
+        </tr>
+        </tbody>
+        </tbody>
+    </table>
+</div>

@@ -29,12 +29,13 @@
                 </td>
                 <td colspan="1">
                     <label for="exampleInputFile">Upload Image</label>
-                    <!--<input name="file" style="transform: translate(75%,50%);" id = "exa2mpleInputFile" type="file">-->
-                    <input type="file" file-model="myFile" id = "exampleInputFile" style="transform: translate(75%,50%);"/>
+                    <div style = "height: 0px; overflow:hidden">
+                        <input type="file" file-model="myFile" id = "exampleInputFile" style="transform: translate(75%,50%);"/>
+                    </div>
+                    <button  class="btn btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
                     <br>
                     <br>
-                    <button ng-click="uploadImage()">upload</button>
-                    <!--<input type="text" placeholder="Image url" ng-model="item.imgurl">-->
+                    <button type="button" class="btn btn-block btn-info"ng-click="uploadImage()">upload</button>
                 </td>
             </tr>
             </tbody>
