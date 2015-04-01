@@ -23,7 +23,6 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
                 $scope.$apply(function () {
                     if(m.action == "complete" || m.action == "cancelled"){
 
-                        console.log("delete order");
                         delete $scope.allPendingOrder[m.orderId];
                         $scope.allCompletedOrder.push(m);
                         $cookieStore.put("allPendingOrder", $scope.allPendingOrder);
@@ -76,7 +75,17 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             channel: 'Channel1',
             message: sendorder
         });
-        console.log("DOne");
+        PUBNUB_demo.publish({
+            channel: 'Channel1',
+            message: {
+                "aps": {
+                    "alert": "You got your emails.",
+                    "badge": 9,
+                    "sound": "bingbong.aiff"
+                },
+                "acme 1": 42
+            }
+        });
     };
     $scope.userOrderCancelled = function (order) {
 

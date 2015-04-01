@@ -1,6 +1,8 @@
 /**
  * Created by vikramaditya on 3/25/15.
  */
+var url = "http://192.168.1.78:9292/kitchen/";
+var uploadUrl = "http://192.168.1.78:9292/imageupload";
 
 var app = angular.module("myApp",['ngRoute','ngCookies','ngMaterial','pubnub.angular.service']);
 

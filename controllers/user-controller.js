@@ -1,7 +1,6 @@
 /**
  * Created by vikramaditya on 3/28/15.
  */
-var url = "http://192.168.1.78:9292/kitchen/";
 
 app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$cookieStore){
 
@@ -36,7 +35,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         }else{
 
             $mdDialog.show({
-                templateUrl: 'views/userDetails.html',
+                templateUrl: '../views/userDetails.html',
                 controller: 'detailsModalController',
                 targetEvent: ev
             })
@@ -93,7 +92,6 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $http.get(getUrl).
             success(function(data, status, headers, config) {
                 $scope.userMenu = data;
-                console.log(data);
             }).
             error(function(data, status, headers, config) {
                 window.alert("Failed to fetch Menu");
@@ -101,34 +99,28 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     };
     $scope.placeUserOrder = function(){
 
-        if($scope.userAddItem.length != 0){
+        if($scope.userAddItem.length != 0){ // dnt accept null orders
+
             var current_orderid = Math.floor(Date.now());
             var order = {
                 "senderId":$scope.userId,
                 "receiverId":"staff",
-                "action":"init",  //init complete, cancelled
+                "action":"init",  //init, complete, cancelled
                 "orderId": current_orderid.toString(),
                 "tableNumber":$scope.tableId,
                 "items": []
             };
 
-
-            //do pubnub publish here
             $scope.showPending = true;
-
-            //$scope.userPendingOrder.push(angular.copy($scope.userAddItem));
-            console.log("uaIII: ",$scope.userAddItem.length);
-
             order.items =  angular.copy($scope.userAddItem);
 
-            $scope.tableNumber.push(order.tableNumber);
+            $scope.tableNumber.push(order.tableNumber);// dnt knw when and why i wrote this line
 
             PUBNUB_demo.publish({
                 channel: 'Channel1',
                 message: order
             });
 
-            //console.log("upi: ",$scope.userPendingOrder);
             $scope.emptyCart();
         }
 
@@ -167,7 +159,6 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $cookieStore.put("currentQuantityCount", $scope.userQuantityCount);
 
     };
-
     if(currentOrder){
 
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
@@ -180,7 +171,6 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $scope.subscribeChannel();
         $scope.checkPending();
 
-        console.log("already ordered");
         $scope.userAddItem = currentOrder;
 
         if($scope.userItemCount > 0){
@@ -206,7 +196,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $rootScope.userClickedItem = item;
         $rootScope.userClickedItemid = itemid;
          $mdDialog.show({
-             templateUrl: 'views/userModalContent.html',
+             templateUrl: '../views/userModalContent.html',
              controller: 'userModalController',
              targetEvent: ev
             })
@@ -223,10 +213,10 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                         $scope.showCart = true;
                     }else{$scope.showCart = false;}
                 }else{
-                    console.log("cancel");
+                    //console.log("cancel");
                 }
             }, function() {
-                 console.log('You cancelled the dialog.');
+                 //console.log('You cancelled the dialog.');
             });
     };
     $scope.removeUserItem = function(order){
@@ -271,8 +261,8 @@ app.controller('userModalController',function($scope,$mdDialog,$rootScope){
 
     $scope.item = $rootScope.userClickedItem;
     $scope.userAddItem = {
-        itemid:$rootScope.userClickedItemid,
-        name:$scope.item.name,
+        itemId:$rootScope.userClickedItemid,
+        itemName:$scope.item.name,
         quantity:"",
         comments:""
     };

@@ -4,8 +4,7 @@
 /* Controller for kitchen admin end */
 
 
-var url = "http://192.168.1.78:9292/kitchen/";
-var uploadUrl = "http://192.168.1.78:9292/imageupload";
+
 var PUBNUB_demo;
 
 app.controller('LoginController', function($scope, $rootScope, $location, $http, $cookieStore) {
@@ -184,7 +183,6 @@ app.controller('addItemViewController', function($scope, $rootScope, $location, 
         document.getElementById("exampleInputFile").click();
 
         document.getElementById("exampleInputFile").onchange = function () {
-            //console.log('Selected file:',this.value.split("\\")[2]);
 
             var itemName =  this.value.substr(this.value.lastIndexOf("\\")+1,this.value.length);
             $scope.$apply(function() {
@@ -266,8 +264,8 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
         $scope.roleId = "";
 
         $cookieStore.remove("roleId");
-        $cookieStore.remove("userId");
-        $cookieStore.remove("tableId");
+        $cookieStore.remove("userId");//
+        $cookieStore.remove("tableId");//
         $cookieStore.remove("kitchenid");
         $cookieStore.remove("allCompletedOrder");
 
@@ -448,10 +446,11 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
 
         $scope.login = function(roleId){
 
-            if(! $scope.kitchenid){
+            if(!$scope.kitchenid){
                 window.alert("Empty kitchen id");
                 $location.path("/login");
             }else{
+                // show logging in
 
                 $rootScope.showToolBar = true;
 
