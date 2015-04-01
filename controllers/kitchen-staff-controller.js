@@ -75,17 +75,6 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             channel: 'Channel1',
             message: sendorder
         });
-        PUBNUB_demo.publish({
-            channel: 'Channel1',
-            message: {
-                "aps": {
-                    "alert": "You got your emails.",
-                    "badge": 9,
-                    "sound": "bingbong.aiff"
-                },
-                "acme 1": 42
-            }
-        });
     };
     $scope.userOrderCancelled = function (order) {
 
