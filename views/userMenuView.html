@@ -132,7 +132,7 @@
             <tr>
                 <th class="col-md-1">
                     <strong>
-                    Index
+                    No.
                     </strong>
                 </th>
 
@@ -167,11 +167,14 @@
                     <strong>{{order.orderId}}</strong>
                 </td>
                 <td>
-                    <dl ng-repeat="(item,userorder) in order.items">
-                        <dt>Item Name : {{userorder.name}}</dt>
-                        <dd>Quantity : {{userorder.quantity}}</dd>
-                        <dd>Comments: {{userorder.comments}}</dd>
-                    </dl>
+                    <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+
+                        <dt>{{userMenu.items[userorder.itemId].name}}</dt>
+                        <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
+                        <dd><strong>x{{userorder.quantity}}</strong></dd>
+                        <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                        <!--<dd>{{userorder.comments}}</dd>-->
+                    </div>
                 </td>
                 <td>
                     <strong>Table no: </strong>{{order.tableNumber}}
@@ -224,7 +227,7 @@
             </td>
             <td>
                 <dl ng-repeat="(item,userorder) in order.items">
-                    <dt>Item Name : {{userorder.name}}</dt>
+                    <dt>Item Name : {{userorder.itemName}}</dt>
                     <dd>Quantity : {{userorder.quantity}}</dd>
                     <dd>Comments: {{userorder.comments}}</dd>
                 </dl>
