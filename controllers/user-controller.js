@@ -25,6 +25,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
         var uid = $cookieStore.get("userId");
         var tid = $cookieStore.get("tableId");
+
         if(uid && tid){
 
             $scope.userId = uid;
@@ -32,8 +33,8 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             $scope.tableId = tid;
             $rootScope.tableId = tid;
 
-        }else{
-
+        }
+        else{
             $mdDialog.show({
                 templateUrl: '../views/userDetails.html',
                 controller: 'detailsModalController',
@@ -43,18 +44,25 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
                     if(answer == 'ok'){
 
-                        $rootScope.userId = $rootScope.userIdInput;
                         $rootScope.tableId = $rootScope.tableIdInput;
-                        $scope.userId = $rootScope.userId;
                         $scope.tableId = $rootScope.tableId;
-
-                        $cookieStore.put("userId",$scope.userId);
                         $cookieStore.put("tableId",$scope.tableId);
 
                     }
                 }, function() {
                     $scope.getDetail();
                 });
+        }
+        if(!uid){
+
+            //$rootScope.userIdInput = $scope.userIdInput;
+            $rootScope.userId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString();
+            $scope.userId = $rootScope.userId;
+            $cookieStore.put("userId",$scope.userId);
+
+        }else{
+            $rootScope.userId = uid;
+            $scope.userId = $rootScope.userId;
         }
     };
     $scope.subscribeChannel = function(){
@@ -64,7 +72,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             subscribe_key: 'sub-c-4dde67e6-d2fe-11e4-844b-0619f8945a4f'
         });
         PUBNUB_demo.subscribe({
-            channel: 'Channel1',
+            channel: $rootScope.kitchenid,
             message: function(m){
                 $scope.$apply(function () {
 
@@ -89,6 +97,26 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
         var getUrl = url + $scope.kitchenid + "/menu";
 
+
+        var MenuObject = Parse.Object.extend("Menu");
+        var query = new Parse.Query(MenuObject);
+
+        query.equalTo("kitchenid", $scope.kitchenid);
+        query.first({
+            success: function(data) {
+                // The object was retrieved successfully.
+                var menu = data.get("data");
+                $scope.$apply(function(){
+                    $scope.userMenu = menu;
+                });
+            },
+            error: function(object, error) {
+                console.log(object,error);
+                // The object was not retrieved successfully.
+                // error is a Parse.Error with an error code and message.
+            }
+        });
+        /*
         $http.get(getUrl).
             success(function(data, status, headers, config) {
                 $scope.userMenu = data;
@@ -96,6 +124,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             error(function(data, status, headers, config) {
                 window.alert("Failed to fetch Menu");
             });
+            */
     };
     $scope.placeUserOrder = function(){
 
@@ -117,7 +146,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             $scope.tableNumber.push(order.tableNumber);// dnt knw when and why i wrote this line
 
             PUBNUB_demo.publish({
-                channel: 'Channel1',
+                channel: $rootScope.kitchenid,
                 message: order
             });
 
@@ -163,8 +192,8 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
-        $scope.userItemCount = $cookieStore.get("currentItemCount");
-        $scope.userQuantityCount = $cookieStore.get("currentQuantityCount");
+        $scope.userItemCount = parseInt($cookieStore.get("currentItemCount"));
+        $scope.userQuantityCount = parseInt($cookieStore.get("currentQuantityCount"));
 
         $scope.getMenu();
         $scope.getDetail();
@@ -205,8 +234,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                     //      Array     ////////////////  Object
                     $scope.userAddItem.push($rootScope.userAddItem);
                     $scope.userItemCount += 1;
-                    $scope.userQuantityCount += $rootScope.userAddItem.quantity;
-
+                    $scope.userQuantityCount += parseInt($rootScope.userAddItem.quantity);
                     $scope.updateCookie();
 
                     if($scope.userItemCount > 0){
@@ -229,7 +257,11 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
         if($scope.userItemCount > 0){
             $scope.showCart = true;
-        }else{$scope.showCart = false;}
+        }else{
+            $scope.userItemCount = 0;
+            $scope.userQuantityCount = 0;
+            $scope.showCart = false;
+        }
     };
 });
 app.controller('detailsModalController',function($scope,$mdDialog,$rootScope){
@@ -243,18 +275,14 @@ app.controller('detailsModalController',function($scope,$mdDialog,$rootScope){
     //};
 
     $scope.answer = function(answer) {
-        if($scope.userIdInput){
-            if($scope.tableIdInput){
-                $rootScope.tableIdInput = $scope.tableIdInput;
-                $rootScope.userIdInput = $scope.userIdInput;
-                $mdDialog.hide(answer);
-            }else{
-                window.alert("Input table id");
-            }
-        }else{
-            window.alert("Input user id");
-        }
 
+      if($scope.tableIdInput){
+          $rootScope.tableIdInput = $scope.tableIdInput;
+          $mdDialog.hide(answer);
+      }
+      else{
+            window.alert("Input table id");
+      }
     };
 });
 app.controller('userModalController',function($scope,$mdDialog,$rootScope){
@@ -263,7 +291,7 @@ app.controller('userModalController',function($scope,$mdDialog,$rootScope){
     $scope.userAddItem = {
         itemId:$rootScope.userClickedItemid,
         itemName:$scope.item.name,
-        quantity:"",
+        quantity:1,
         comments:""
     };
 
@@ -277,5 +305,4 @@ app.controller('userModalController',function($scope,$mdDialog,$rootScope){
         $rootScope.userAddItem = $scope.userAddItem;
         $mdDialog.hide(answer);
     };
-
 });

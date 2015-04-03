@@ -1,17 +1,24 @@
 <md-dialog aria-label="Item" style="width: 40%">
     <md-content class="sticky-container">
-        <h2>{{item.name}}</h2>
-        <!--<md-subheader class="md-sticky-no-effect">Mango (Fruit)</md-subheader>-->
-        <div class="dialog-content">
-            <img src="{{item.imgurl}}" style="float: left; margin-right: 20px; margin-bottom: 20px">
-            <p>
-                {{item.desc}}
-            </p>
 
+        <div style="float: left">
+            <div>
+                <img src="{{item.imgurl}}" style="width: 100px;height: 100px;">
+            </div>
+            <div style="clear: left">
+                <h5>{{item.name}}</h5>
+                <small>
+                    {{item.desc}}
+                </small>
+            </div>
+        </div>
+
+        <div style="float: right">
             <form>
-                <div class="form-group">
-                    <label class="sr-only" for="quantity">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" placeholder="Quantity" ng-model="userAddItem.quantity">
+                <div class="form-group" style="text-align: right">
+                    <!--<label class="sr-only" for="quantity">Quantity</label>-->
+                    <!--<input type="number" class="form-control" id="quantity1" placeholder="Quantity" ng-model="userAddItem.quantity">-->
+                    <b>X </b><input style="width: 35px;" size="4" type="number"  id="quantity" placeholder="Quantity" ng-model="userAddItem.quantity">
                 </div>
 
                 <div class="form-group">
@@ -19,15 +26,20 @@
                     <textarea type="text" class="form-control" id="description" placeholder="Comments" ng-model = "userAddItem.comments" ></textarea>
                 </div>
             </form>
+            <div layout="row">
+                <span flex></span>
+                <button style="margin-right: 10px;" ng-click="answer('cancel')" class="btn-lg btn-primary">
+                    Cancel
+                </button>
+                <button ng-click="answer('add')" class="btn-lg btn-danger">
+                    OK
+                </button>
+            </div>
         </div>
+
+        <!--<div class="dialog-content">-->
+
+        <!--</div>-->
     </md-content>
-    <div class="md-actions" layout="row">
-        <span flex></span>
-        <button ng-click="answer('cancel')" class="btn-lg btn-primary">
-            Cancel
-        </button>
-        <button ng-click="answer('add')" class="btn-lg btn-danger">
-                  OK
-        </button>
-    </div>
+
 </md-dialog>

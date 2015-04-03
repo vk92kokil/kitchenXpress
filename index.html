@@ -35,6 +35,10 @@
     <!--JQuery-->
     <script src="scripts/jquery.min.js"></script>
 
+    <!-- Parse-->
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.4.0.min.js"></script>
+
+
     <!-- Page styles -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/components.css">
@@ -72,16 +76,6 @@
       </div>
     </header>
 
-    <!--<nav class="navdrawer-container promote-layer">-->
-      <!--<h4>Navigation</h4>-->
-      <!--<ul>-->
-          <!--<li><a href="#login">Login</a></li>-->
-          <!--<li><a href="#menuView">View Menu</a></li>-->
-          <!--<li><a href="#addItem">Add a Menu Item</a></li>-->
-          <!--<li><a >Logout</a></li>-->
-      <!--</ul>-->
-    <!--</nav>-->
-
       <main>
         <div ng-view></div>
         <!--<h1 id="hello">Hello!</h1>-->
@@ -107,5 +101,28 @@
     </script>
     <!-- Built with love using Web Starter Kit -->
 
+    <script type="text/javascript">
+      Parse.initialize("aQbCZwyIsrThpcMhOkBjD3rA8kvhrkBQKXWpGti3", "oa9JZi6EhT3KMC8NSwRCxsW2IkMtaVNMGeaZlMpB");
+
+      /*
+      var TestObject = Parse.Object.extend("Menu");
+      var query = new Parse.Query(TestObject);
+
+      query.equalTo("kitchenid", "easymoby");
+      query.first({
+        success: function(data) {
+          // The object was retrieved successfully.
+          var menu = data.get("data");
+          //console.log("X = ",menu);
+        },
+        error: function(object, error) {
+          console.log(object,error);
+          // The object was not retrieved successfully.
+          // error is a Parse.Error with an error code and message.
+        }
+      });
+      */
+
+    </script>
   </body>
 </html>

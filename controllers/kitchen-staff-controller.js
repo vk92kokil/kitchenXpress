@@ -4,11 +4,12 @@
 app.controller('staffMenuController',function($scope, $rootScope, $location, $http, $cookieStore){
 
     $scope.showPending = true;
-
     $scope.allCompletedOrder = [];
     $scope.allPendingOrder = {};
+
     var current_order;
     var kitchenid = $cookieStore.get("kitchenid");
+
 
     $scope.subscribeChannel = function(){
 
@@ -18,7 +19,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
         });
 
         PUBNUB_demo.subscribe({
-            channel: 'Channel1',
+            channel: $rootScope.kitchenid,
             message: function(m){
                 $scope.$apply(function () {
                     if(m.action == "complete" || m.action == "cancelled"){
@@ -43,7 +44,47 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             }
         });
     };
+    $scope.getMenu = function() {
+
+        var getUrl = url + $scope.kitchenid + "/menu";
+
+        /*
+        $http.get(getUrl).
+            success(function(data, status, headers, config) {
+                $scope.menu = data;
+                $rootScope.menu = data;
+            }).
+            error(function(data, status, headers, config) {
+                window.alert("Failed to fetch Menu");
+            });
+        */
+        var MenuObject = Parse.Object.extend("Menu");
+        var query = new Parse.Query(MenuObject);
+
+        query.equalTo("kitchenid", $scope.kitchenid);
+        query.first({
+            success: function(data) {
+                // The object was retrieved successfully.
+                var menu = data.get("data");
+                $scope.$apply(function(){
+                    $scope.menu = menu;
+                    $rootScope.menu = menu;
+                });
+            },
+            error: function(object, error) {
+                console.log(object,error);
+                // The object was not retrieved successfully.
+                // error is a Parse.Error with an error code and message.
+            }
+        });
+    };
+
     if(kitchenid){
+        $rootScope.kitchenid = kitchenid;
+        $scope.kitchenid = kitchenid;
+        $scope.getMenu();
+        $scope.subscribeChannel();
+
         var pendingOrder = $cookieStore.get("allPendingOrder");
         var completedOrder = $cookieStore.get("allCompletedOrder");
 
@@ -54,8 +95,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             $scope.allCompletedOrder = completedOrder;
         }
 
-        $rootScope.kitchenid = kitchenid;
-        $scope.subscribeChannel();
+
 
     }else{
         $location.path("/login");
@@ -72,7 +112,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             "items": order.items
         };
         PUBNUB_demo.publish({
-            channel: 'Channel1',
+            channel: $rootScope.kitchenid,
             message: sendorder
         });
     };
@@ -89,7 +129,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
             "items": order.items
         };
         PUBNUB_demo.publish({
-            channel: 'Channel1',
+            channel: $rootScope.kitchenid,
             message: sendorder
         });
     };

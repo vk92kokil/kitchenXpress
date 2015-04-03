@@ -4,7 +4,6 @@
 /* Controller for kitchen admin end */
 
 
-
 var PUBNUB_demo;
 
 app.controller('LoginController', function($scope, $rootScope, $location, $http, $cookieStore) {
@@ -44,16 +43,6 @@ app.controller('LoginController', function($scope, $rootScope, $location, $http,
         $location.path("/login");
     }
 
-    /*
-    if (kitchenid)
-    {
-        console.log("Yes Cookie ", kitchenid);
-        $rootScope.kitchenid = kitchenid;
-        $scope.kitchenid = kitchenid;
-        $scope.getMenu();
-
-    }*/
-
     $scope.login = function(roleId) {
 
         if(! $scope.kitchenid){
@@ -88,7 +77,6 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
 
     $scope.visibility = false;
     $scope.menu = $rootScope.menu;
-
     $scope.addItemClicked = function() {
         $location.path("/addItem");
     };
@@ -98,21 +86,55 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
 
         $scope.visibility = true;
 
-        $http.post(postUrl, $rootScope.menu).
-            success(function(data, status, headers, config) {
-                //window.alert("Successfully updated your menu list");
-                $scope.visibility = true; // keep true here, do false after refreshing
-                var kitchenid = $cookieStore.get("kitchenid");
-                $rootScope.kitchenid = kitchenid;
-                $scope.getRefreshedMenu();
-            }).
-            error(function(data, status, headers, config) {
-                window.alert("Error while updating");
+        var kitchenid = $cookieStore.get("kitchenid");
+        $rootScope.kitchenid = kitchenid;
+
+        var Menu = Parse.Object.extend("Menu");
+        var query = new Parse.Query(Menu);
+
+        query.equalTo('kitchenid',kitchenid);
+
+        query.first().then(function(saveobj){
+
+            //console.log('Menu saving to server');
+
+            saveobj.set("data", $rootScope.menu);
+
+            saveobj.save(null,function(){
+
+                $scope.$apply(function(){
+                    console.log("done saving");
+                    $scope.getRefreshedMenu();
+                });
             });
+        });
     };
-    $scope.getRefreshedMenu = function() {
+    $rootScope.getRefreshedMenu = function() {
 
+        var Menu = Parse.Object.extend("Menu");
+        var query = new Parse.Query(Menu);
+        query.equalTo("kitchenid", $rootScope.kitchenid);
+        query.first({
+            success: function(data) {
+                // The object was retrieved successfully.
+                $scope.$apply(function () {
 
+                    console.log(data,"done!!",$rootScope.kitchenid);
+                    $rootScope.menu = data.get("data");
+                    $scope.menu = data.get("data");
+                    $scope.visibility = false;
+
+                });
+            },
+            error: function(object, error) {
+
+                console.log(object,error);
+                window.alert("Failed to fetch Menu");
+
+            }
+        });
+
+        /*
         var getUrl = url + $rootScope.kitchenid + "/menu";
 
         $http.get(getUrl).
@@ -124,10 +146,13 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
             error(function(data, status, headers, config) {
                 window.alert("Failed to fetch Menu");
             });
+        */
     };
     $scope.editItem = function(itemId) {
+        $cookieStore.put("itemId",itemId);
         $rootScope.currentItemId = itemId;
         $location.path("/edit");
+
     };
     $scope.removeItem = function(itemId) {
 
@@ -138,13 +163,14 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
     if (!$scope.menu) {
         var kitchenid = $cookieStore.get("kitchenid");
         $rootScope.kitchenid = kitchenid;
+        $scope.kitchenid = kitchenid;
         $scope.visibility = true;
         $scope.getRefreshedMenu();
     }
 });
 app.controller('addItemViewController', function($scope, $rootScope, $location, fileUpload, $mdDialog) {
 
-    $scope.addItem_fileName = "Choose File..";
+    $scope.addItem_fileName = "Choose";
 
     $scope.visibility = false;
     $scope.itemid = Math.floor(Date.now());
@@ -152,7 +178,7 @@ app.controller('addItemViewController', function($scope, $rootScope, $location, 
     {
         name: "",
         desc: "",
-        imgurl: "/images/icons/placeholder--medium.png"
+        imgurl: "http://files.parsetfss.com/f2586993-6407-483f-bead-faca0ff98f78/tfss-6b15990d-fd37-4971-8bb7-3e805128f0a7-foodplaceholder.jpg"
     };
 
     $scope.addClicked = function() {
@@ -166,11 +192,15 @@ app.controller('addItemViewController', function($scope, $rootScope, $location, 
         $scope.visibility = true;
 
         var file = $scope.myFile;
+        console.log("file   ",file);
+        var fileName = $scope.addItem_fileName;
 
-        fileUpload.uploadFileToUrl(file, uploadUrl, function(result) {
+        fileUpload.uploadFileToUrl(file,fileName,function(result) {
             //console.log("On callback result",result);
-            $scope.item.imgurl = result.url;
-            $scope.visibility = false;
+            $scope.$apply(function () {
+                $scope.item.imgurl = result.url;
+                $scope.visibility = false;
+            });
         });
     };
     $scope.cancel = function() {
@@ -191,29 +221,39 @@ app.controller('addItemViewController', function($scope, $rootScope, $location, 
         };
     }
 });
-app.controller('EditController', function($scope, $rootScope, $location, fileUpload) {
+app.controller('EditController', function($scope, $rootScope, $location, fileUpload,$cookieStore) {
 
-    $scope.addItem_fileName = "Choose File..";
+    $scope.addItem_fileName = "Choose";
 
     $scope.visibility = false;
     $scope.currentItemId = $rootScope.currentItemId;
+    if(! $scope.currentItemId){
+        $scope.currentItemId = $cookieStore.get("itemId");
+        $rootScope.currentItemId = $scope.currentItemId;
+    }
     $scope.item = $rootScope.menu.items[$scope.currentItemId];
 
     $scope.edit = function() {
         $rootScope.menu.items[$scope.currentItemId] = $scope.item;
+        $cookieStore.remove("itemId");
         $location.path("/menu");
     };
     $scope.uploadImage = function() {
         $scope.visibility = true;
-        var file = $scope.myFile;
 
+        var file = $scope.myFile;
         //console.log('updated file is ' + JSON.stringify(file));
 
-        fileUpload.uploadFileToUrl(file, uploadUrl, function(result) {
+        var fileName = $scope.addItem_fileName;
 
-            $scope.item.imgurl = result.url;
-            $scope.visibility = false;
+        fileUpload.uploadFileToUrl(file, fileName, function(result) {
+
+            $scope.$apply(function () {
+                $scope.item.imgurl = result.url;
+                $scope.visibility = false;
+            });
         });
+
     };
     $scope.chooseFile = function() {
 
@@ -253,27 +293,33 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
         $rootScope.showToolBar = false;
         $rootScope.showMenu = false;
 
-        $rootScope.kitchenid = "";
-        $rootScope.userId = "";
+        //$rootScope.kitchenid = "";
+        //$rootScope.userId = "";
         $rootScope.tableId = "";
         $rootScope.roleId = "";
 
-        $scope.kitchenid = "";
-        $scope.userId = "";
+        //$scope.kitchenid = "";
+        //$scope.userId = "";
         $scope.tableId = "";
         $scope.roleId = "";
 
         $cookieStore.remove("roleId");
-        $cookieStore.remove("userId");//
+        //$cookieStore.remove("userId");//
         $cookieStore.remove("tableId");//
-        $cookieStore.remove("kitchenid");
+        //$cookieStore.remove("kitchenid");
         $cookieStore.remove("allCompletedOrder");
 
         $location.path("/login");
     };
     $scope.back = function() {
+        console.log("menu show");
         $location.path("/menu");
     };
+    var kid = $cookieStore.get("kitchenid");
+    if(kid){
+        $scope.kitchenid = kid;
+        $rootScope.kitchenid = kid;
+    }
 
     /*
     var kitchenid = $cookieStore.get("kitchenid");
@@ -382,16 +428,39 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
 
         $scope.getMenu = function() {
 
-            var getUrl = url + $scope.kitchenid + "/menu";
+            //var getUrl = url + $scope.kitchenid + "/menu";
+            //
+            //$http.get(getUrl).
+            //    success(function(data, status, headers, config) {
+            //        $rootScope.menu = data;
+            //        $location.path("/menu");
+            //    }).
+            //    error(function(data, status, headers, config) {
+            //        window.alert("Failed to fetch Menu");
+            //    });
 
-            $http.get(getUrl).
-                success(function(data, status, headers, config) {
-                    $rootScope.menu = data;
-                    $location.path("/menu");
-                }).
-                error(function(data, status, headers, config) {
-                    window.alert("Failed to fetch Menu");
-                });
+            var MenuObject = Parse.Object.extend("Menu");
+            var query = new Parse.Query(MenuObject);
+
+            query.equalTo("kitchenid", $scope.kitchenid);
+            query.first({
+                success: function(data) {
+                    // The object was retrieved successfully.
+                    var menu = data.get("data");
+                    $scope.$apply(function(){
+                        $rootScope.menu = menu;
+                        console.log("obj: ",menu);
+
+                        $location.path("/menu");
+
+                    });
+                },
+                error: function(object, error) {
+                    console.log(object,error);
+                    // The object was not retrieved successfully.
+                    // error is a Parse.Error with an error code and message.
+                }
+            });
         };
         if(roleId && kitchenid){
 
@@ -426,11 +495,16 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                 // staff or admin logged in already
                 switch (roleId) {
                     case "Admin": //Admin
+                        $scope.kitchenid = kitchenid;
+                        $rootScope.kitchenid = $scope.kitchenid;
                         $rootScope.showToolBar = true;
                         $rootScope.showMenu = true;
                         $scope.getMenu();
                         break;
                     case "Staff": // Staff
+                        $scope.kitchenid = kitchenid;
+                        $rootScope.kitchenid = $scope.kitchenid;
+
                         $rootScope.showToolBar = true;
                         $location.path("/staffMenu");
                         break;
@@ -451,6 +525,7 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                 $location.path("/login");
             }else{
                 // show logging in
+                localStorage.setItem("kitchenid",$scope.kitchenid);
 
                 $rootScope.showToolBar = true;
 

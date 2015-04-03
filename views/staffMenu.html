@@ -1,124 +1,64 @@
 <h2 style="text-align: center">
-    Staff Orders List
+   {{kitchenid}} orders list
 </h2>
 <div>
-    <table  class="table table-bordered">
-        <thead>
-        <tr>
-            <th colspan="5">
-                Pending Orders
-            </th>
-        </tr>
-        </thead>
-        <tbody style="text-align: center;">
-        <tr>
-            <th class="col-md-1">
 
-                Index
+    <div style="clear:both; text-align: center" >
+        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
+            Pending Orders
+        </h3>
+        <md-card class="col-md-12" layout="row" layout-wrap ng-repeat="(oi,order) in allPendingOrder">
 
-            </th>
+            <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
 
-            <th>
-                OrderId
-            </th>
-            <th>
-                <strong>
-                    Items
-                </strong>
+                <dt>{{menu.items[userorder.itemId].name}}</dt>
+                <dt><img class="img-circle" style="width:50px;height:50px" src="{{menu.items[userorder.itemId].imgurl}}"></dt>
+                <dd><strong>x{{userorder.quantity}}</strong></dd>
+                <dd>{{userorder.comments}}</dd>
 
-            </th>
-            <th>
-                <strong>
-                    Table Number
-                </strong>
-            </th>
-
-            <th>
-                <strong>
-                    Action
-                </strong>
-            </th>
-
-        </tr>
-
-        <tr ng-repeat="(index,order) in allPendingOrder">
-            <td>
-                {{$index+1}}
-            </td>
-            <td>
-                    <strong>{{order.orderId}}</strong>
-            </td>
-            <td>
-                <dl ng-repeat="(item,userorder) in order.items">
-                    <dt>Item Name : {{userorder.itemName}}</dt>
-                    <dd>Quantity : {{userorder.quantity}}</dd>
-                    <dd>Comments: {{userorder.comments}}</dd>
-                </dl>
-            </td>
-            <td>
-                <strong>Table no: </strong>{{order.tableNumber}}
-            </td>
-            <td>
+                <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                <!--<dd>{{userorder.comments}}</dd>-->
+            </div>
+            <div style="position: absolute;">
+                <p>
+                    <strong>Table no: </strong>{{order.tableNumber}}
+                </p>
+                <p>
+                    Order No:{{order.orderId}}
+                </p>
+            </div>
+            <div style="position: absolute; top: 35%;right: 10px;">
                 <button ng-click="userOrderCancelled(order)" type="button" class="btn btn-danger" tooltip="Not Available">Not Available</button>
                 <button ng-click="userOrderCompleted(order)"  type="button" class="btn btn-success" tooltip="Order Completed">Done</button>
-            </td>
-        </tr>
-        </tbody>
+            </div>
+        </md-card>
+    </div>
 
-        <!-- Completed Orders -->
-        <thead>
-        <tr>
-            <th colspan="5">
-                Completed Orders
-            </th>
-        </tr>
-        </thead>
-        <tbody style="text-align: center;">
-        <tr>
-            <th>
-                Index
-            </th>
-            <th>
-                OrderId
-            </th>
-            <th>
-                <strong>
-                    Items
-                </strong>
+    <div style="clear:both; text-align: center" >
+        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
+            Completed Orders
+        </h3>
 
-            </th>
-            <th>
-                <strong>
-                    Table Number
-                </strong>
-            </th>
-            <th>
-                Action
-            </th>
-        </tr>
+        <md-card class="col-md-12" layout="row" layout-wrap ng-repeat="(oi,order) in allCompletedOrder">
 
-        <tr ng-repeat="order in allCompletedOrder">
-            <td>
-                {{$index+1}}
-            </td>
-            <td>
-                <strong>{{order.orderId}}</strong>
-            </td>
-            <td>
-                <dl ng-repeat="(item,userorder) in order.items">
-                    <dt>Item Name : {{userorder.name}}</dt>
-                    <dd>Quantity : {{userorder.quantity}}</dd>
-                    <dd>Comments: {{userorder.comments}}</dd>
-                </dl>
-            </td>
-            <td>
-                <strong>Table no: </strong>{{order.tableNumber}}
-            </td>
-            <td>
-                <p>{{order.action}}</p>
-            </td>
-        </tr>
-        </tbody>
-        </tbody>
-    </table>
+            <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+
+                <dt>{{menu.items[userorder.itemId].name}}</dt>
+                <dt><img class="img-circle" style="width:50px;height:50px" src="{{menu.items[userorder.itemId].imgurl}}"></dt>
+                <dd><strong>x{{userorder.quantity}}</strong></dd>
+                <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                <!--<dd>{{userorder.comments}}</dd>-->
+            </div>
+            <div style="position: absolute; right: 10px;">
+                <h5>
+                    Table no: {{order.tableNumber}}
+                    <br>
+                </h5>
+                <h7>Status: {{order.action}}</h7><br>
+                <h7>
+                    Order No:{{order.orderId}}
+                </h7>
+            </div>
+        </md-card>
+    </div>
 </div>
