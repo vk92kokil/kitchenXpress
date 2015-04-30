@@ -4,7 +4,7 @@
 app.controller('staffMenuController',function($scope, $rootScope, $location, $http, $cookieStore){
 
     $scope.showPending = true;
-    $scope.allCompletedOrder = [];
+    $scope.allCompletedOrder = {};
     $scope.allPendingOrder = {};
 
     var current_order;
@@ -21,28 +21,99 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
         PUBNUB_demo.subscribe({
             channel: $rootScope.kitchenid,
             message: function(m){
+                console.log(" M = ",m);
                 $scope.$apply(function () {
+
                     if(m.action == "complete" || m.action == "cancelled"){
 
-                        delete $scope.allPendingOrder[m.orderId];
-                        $scope.allCompletedOrder.push(m);
-                        $cookieStore.put("allPendingOrder", $scope.allPendingOrder);
-                        $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
 
-                        //var index = $scope.allPendingOrder.indexOf(current_order);
-                        //if(index > -1){
-                        //    $scope.allPendingOrder.splice(index,1);
-                        //    $scope.allCompletedOrder.push(m);
-                        //}
+                        var orders = Parse.Object.extend("Orders");
+                        var query = new Parse.Query(orders);
+
+                        query.equalTo('kitchenId',$scope.kitchenid);
+                        query.equalTo('state', 'pending');
+                        query.equalTo('orderId', m.orderId);
+
+                        query.first().then(function(saveobj){
+
+                            saveobj.set('state', m.action);
+
+                            saveobj.save(null,function(){
+                                    console.log("order completed");
+                            });
+                        });
+                        //$scope.$apply();
+                        //$scope.allCompletedOrder = angular.copy($scope.allPendingOrder[m.orderId]);
+
+                        delete $scope.allPendingOrder[m.orderId];
+                        $scope.allCompletedOrder[m.orderId] = m;
+                        //console.log($scope.allPendingOrder,$scope.allCompletedOrder," LOG ");
+                        /*$cookieStore.put("allPendingOrder", $scope.allPendingOrder);
+                        $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
+                        */
+                        //$scope.getOrdersList();
                     }
-                    if(m.action == "init"){
-                        $scope.allPendingOrder[m.orderId] = m;
-                        $cookieStore.put("allPendingOrder", $scope.allPendingOrder);
-                        //$scope.allPendingOrder.push(m);
+                    if(m.action == "pending"){
+                        $scope.getOrdersList();
                     }
                 });
             }
         });
+    };
+
+    $scope.getOrdersList = function(){
+
+        var orders = Parse.Object.extend("Orders");
+        var query = new Parse.Query(orders);
+
+        query.equalTo('kitchenId',$scope.kitchenid);
+        query.equalTo('state', 'pending');
+
+        query.find({
+
+            success: function (results) {
+
+                $scope.$apply(function () {
+                    $scope.allPendingOrder = {};
+                    for(var i=0;i<results.length;i++){
+                        var oid = results[i].get("orderId");
+                        $scope.allPendingOrder[oid] = results[i];
+                    }
+                });
+                setPopOvers();
+                console.log($scope.allPendingOrder,results);
+            },
+            error: function (error) {
+
+                console.log("No pending List", error);
+            }
+        });
+
+        /*
+        var query2 = new Parse.Query(orders);
+        query2.equalTo('kitchenId',$scope.kitchenid);
+        query2.notEqualTo('state', 'pending'); //Not equal to
+
+        query2.find({
+
+            success: function (results) {
+                $scope.$apply(function () {
+                    $scope.allCompletedOrder= {};
+                    for(var i=0;i<results.length;i++){
+                        var oid = results[i].get("orderId");
+                        $scope.allCompletedOrder[oid] = results[i];
+                    }
+                    console.log("cos");
+                    //$scope.allCompletedOrder = results;
+                });
+            },
+            error: function (error) {
+
+                console.log("Error in fetching completed orders", error);
+            }
+        });
+        */
+
     };
     $scope.getMenu = function() {
 
@@ -80,21 +151,24 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
     };
 
     if(kitchenid){
+
         $rootScope.kitchenid = kitchenid;
         $scope.kitchenid = kitchenid;
         $scope.getMenu();
         $scope.subscribeChannel();
+        $scope.getOrdersList();
 
         var pendingOrder = $cookieStore.get("allPendingOrder");
         var completedOrder = $cookieStore.get("allCompletedOrder");
 
+        /*
         if(pendingOrder){
             $scope.allPendingOrder = pendingOrder;
         }
         if(completedOrder){
             $scope.allCompletedOrder = completedOrder;
         }
-
+        */
 
 
     }else{
@@ -105,11 +179,11 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
         current_order = order;
         var sendorder = {
             "senderId":"staff",
-            "receiverId":order.senderId,
-            "action":"complete",  //init complete, cancelled
-            "orderId":order.orderId,
-            "tableNumber":order.tableNumber,
-            "items": order.items
+            "receiverId":order.get('userId'),
+            "action":"complete",  //pending complete, cancelled
+            "orderId":order.get('orderId'),
+            "tableNumber":order.get('tableNumber'),
+            "items": order.get('data').items
         };
         PUBNUB_demo.publish({
             channel: $rootScope.kitchenid,
@@ -122,15 +196,24 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
 
         var sendorder = {
             "senderId":"staff",
-            "receiverId":order.senderId,
+            "receiverId":order.get('userId'),
             "action":"cancelled",  //init complete, cancelled
-            "orderId":order.orderId,
-            "tableNumber":order.tableNumber,
-            "items": order.items
+            "orderId":order.get('orderId'),
+            "tableNumber":order.get('tableNumber'),
+            "items": order.get('data').items
         };
         PUBNUB_demo.publish({
             channel: $rootScope.kitchenid,
             message: sendorder
         });
     };
+
+
+    var setPopOvers = function(){
+        $("[data-toggle='tooltip']").tooltip({trigger: 'hover'});
+        $("[data-toggle='popover']").popover({trigger: 'click'});
+    };
+
+
+
 });

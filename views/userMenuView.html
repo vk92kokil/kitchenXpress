@@ -9,18 +9,97 @@
     .myMenuItem:hover{
         box-shadow: 0 1px 6px 1px rgba(0,0,0,0.50);
     }
+    .flex-container{
+
+        padding: 0;
+        flex-flow: row wrap;
+        justify-content: space-around;
+
+        -webkit-column-count: 2;
+        -webkit-column-gap: 1em;
+
+        column-count: 2;
+        column-gap: 1em;
+        display: inline-block;
+        border-right: 2px solid #000000;
+    }
+    .flex-item{
+        max-width: 100%;
+        flex-flow: row;
+    }
+    .card-image{
+        padding: 10px;
+        width: 40%;
+    }
+    .cart{
+        display: inline-block;
+        /*float: right;*/
+        /*display: flex;*/
+        flex-direction:column;
+        flex-wrap: wrap;
+        flex-flow: column wrap;
+        justify-content: space-around;
+    }
+    @media screen and (max-width: 480px) {
+        .flex-container{
+
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+
+            -webkit-column-count: 1;
+            -webkit-column-gap: 1em;
+
+            column-count: 1;
+            column-gap: 1em;
+
+        }
+
+    }
+    .menuClass{
+        order: 1;
+        border-right: 5px solid #3372df;
+        width: 50%;
+        padding-right: 0px;
+    }
+    .cartClass{
+        order: 2; width: 50%;
+    }
+    .flexContainer{
+        display: flex;
+        flex: 1 auto;
+        flex-flow: row wrap;
+        text-align: center;
+        justify-content: space-around;
+        width: 100%;
+    }
+    @media screen and (max-width: 580px) {
+        .flexContainer{
+            display: flex;
+        }
+        .menuClass{
+            order: 1;
+            border-right: 0px solid #ffffff;
+            width: 100%;
+            padding-right: 0px;
+        }
+        .cartClass{
+            order: 2;
+            width: 100%;
+        }
+    }
 </style>
 
-<h2 style="text-align: center">
-    {{kitchenid}} menu list
-</h2>
 <div style="float: right;text-align: right">
     <small>UserId: {{userId}}</small><br>
     <small>Table No. <input type="text" size="4" ng-model="tableId"></small>
 </div>
-<div style="clear:both">
-    <md-card class="col-md-5 myMenuItem" layout="row" layout-wrap ng-repeat="(itemid,item) in userMenu.items"  ng-click="showAlert($event,itemid,item)">
-        <div  flex="33" style="padding: 10px"><img style="width: 100%" src="{{item.imgurl}}"></div>
+
+<div ng-show="false" class="flex-container" hidden>
+    <md-card class="myMenuItem flex-item" layout="row" layout-wrap ng-repeat="(itemid,item) in userMenu.items"  ng-click="showAlert($event,itemid,item)">
+        <div class="card-image"><img style="width: 100%" src="{{item.imgurl}}"></div>
         <div  flex>
             <div style="margin:10px">
                 <span style="font-weight:500">{{item.name}}</span><br>
@@ -29,44 +108,170 @@
         </div>
     </md-card>
 </div>
+<div ng-show = "false" class="cart">
+    <div>
+        <div style="text-align: center">
+            <!--<h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">-->
+                <!--Cart Details-->
+            <!--</h3>-->
+            <md-card class="" layout="row" layout-wrap ng-repeat="order in userAddItem">
 
-<div ng-show= showCart>
-    <div style="clear:both; text-align: center" >
-        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
-            Cart Details
-        </h3>
-        <md-card class="col-md-5" layout="row" layout-wrap ng-repeat="order in userAddItem">
+                <div style="display: inline-block;margin:0 10px">
 
-            <div style="display: inline-block;margin:0 10px">
+                    <dt>{{userMenu.items[order.itemId].name}}</dt>
+                    <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[order.itemId].imgurl}}"></dt>
+                    <dd><strong>x{{order.quantity}}</strong></dd>
 
-                <dt>{{userMenu.items[order.itemId].name}}</dt>
-                <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[order.itemId].imgurl}}"></dt>
-                <dd><strong>x{{order.quantity}}</strong></dd>
+                    <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                    <!--<dd>{{userorder.comments}}</dd>-->
+                </div>
+                <small style="text-align: center; margin: 10px;">{{order.comments}}</small>
+                <button ng-click="removeUserItem(order)" type="button" class="btn btn-default" style="position: absolute; top: 25%;right: 10px;">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+            </md-card>
+        </div>
+        <div style="clear:both">
+            <h7>
+                <strong>Details</strong>
+                Items: {{userItemCount}}
+                Quantity: {{userQuantityCount}}
+            </h7>
 
-                <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
-                <!--<dd>{{userorder.comments}}</dd>-->
-            </div>
-            <small style="text-align: center; margin: 10px;">{{order.comments}}</small>
-            <button ng-click="removeUserItem(order)" type="button" class="btn btn-default" style="position: absolute; top: 25%;right: 10px;">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
-        </md-card>
-    </div>
-    <div style="clear:both">
-        <h7>
-            <strong>Details</strong>
-            Items: {{userItemCount}}
-            Quantity: {{userQuantityCount}}
-        </h7>
-
-        <br>
+            <br>
+        </div>
     </div>
 </div>
 
-<button type="button" ng-click="placeUserOrder()" class="btn btn-block btn-success">Place Order</button>
+
+<div class = "flexContainer">
+    <div class = "menuClass">
+        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+            Menu
+        </h3>
+        <md-card class="myMenuItem flex-item" ng-repeat="(itemid,item) in userMenu.items"  ng-click="showAlert($event,itemid,item)">
+
+            <div style="width: 19%;display: flex; flex-direction: column;justify-content: center;align-items: center">
+                <img class="img-circle" style="width: 50px; height: 50px;" src="{{item.imgurl}}">
+            </div>
+
+            <div style="text-align: left;width:80%">
+                <div style="margin:10px; text-align: left;">
+                    <span style="font-weight:500">{{item.name}}</span><br>
+                    <small>{{item.desc}}</small><br>
+                </div>
+            </div>
+        </md-card>
+    </div>
+
+    <div class = "cartClass">
+        <div ng-show= showCart class="flex-item">
+            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+                Cart Items
+            </h3>
+                <div style="text-align: center">
+                    <!--<h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">-->
+                    <!--Cart Details-->
+                    <!--</h3>-->
+                    <md-card class = "flex-item" ng-repeat="order in userAddItem" style="display: flex;justify-content: space-between;">
+
+                        <div style="display: inline-block;margin:0 10px">
+
+                            <dt>{{userMenu.items[order.itemId].name}}</dt>
+                            <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[order.itemId].imgurl}}"></dt>
+                            <dd><strong>x{{order.quantity}}</strong></dd>
+
+                            <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                            <!--<dd>{{userorder.comments}}</dd>-->
+                        </div>
+                        <small style="text-align: center; margin: 10px;">{{order.comments}}</small>
+                        <button ng-click="removeUserItem(order)" type="button" class="btn btn-default" style="margin-top: 5%; margin-right: 5%; width: 50px; height: 50px;">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </md-card>
+                </div>
+
+                <div style="clear:both">
+                    <h7>
+                        <strong>Details</strong>
+                        Items: {{userItemCount}}
+                        Quantity: {{userQuantityCount}}
+                    </h7>
+
+                    <br>
+                </div>
+            <div style="text-align: center">
+                <button style="margin: 10px auto;width: 60%;border-radius: 0px;" type="button" ng-click="placeUserOrder()" class="btn btn-block btn-success">Place Order</button>
+            </div>
+        </div>
+
+        <div style="text-align: center" >
+            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+                Pending Orders
+            </h3>
+            <md-card layout="row" layout-wrap ng-repeat="(oi,order) in userPendingOrder">
+
+                <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+
+                    <dt>{{userMenu.items[userorder.itemId].name}}</dt>
+                    <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
+                    <dd><strong>x{{userorder.quantity}}</strong></dd>
+                </div>
+                <div ng-show="false" style="position: absolute; right: 10px;">
+                    <p>
+                        Action: {{order.action}}
+                    </p>
+                    <h5>
+                        Order No: {{order.orderId}}
+                    </h5>
+                </div>
+                <div class="flex-item" style="display: flex; justify-content: flex-end">
+                     <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                </div>
+            </md-card>
+        </div>
+
+        <div style="clear:both; text-align: center">
+            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+                Completed Orders <span style="float: right;"><small style="color: #000000;">Clear</small></span>
+            </h3>
+            <md-card class="flex-item" style="display: flex;justify-content: flex-start;" ng-repeat="(oi,order) in allCompletedOrder">
+
+                <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+
+                    <dt>{{userMenu.items[userorder.itemId].name}}</dt>
+                    <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
+                    <dd><strong>x{{userorder.quantity}}</strong></dd>
+                    <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                    <!--<dd>{{userorder.comments}}</dd>-->
+                </div>
+
+                <div class="flex-item" style="display: flex; justify-content: flex-start">
+                    <div ng-show="false">
+                        Status: {{order.action}}
+                    </div>
+                    <div  ng-if="order.action == 'complete' ">
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                    </div>
+                    <div ng-if="order.action == 'cancelled' ">
+                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                    </div>
+                    <!--<div style="margin-top: 5%; margin-right: 5%; width: 50px; height: 50px;">-->
+                    <!--<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>-->
+                    <!--</div>-->
+                    <!--Order No: {{order.orderId}}-->
+                </div>
+            </md-card>
+
+        </div>
+    </div> <!-- Cart end-->
+</div> <!-- main div end-->
+
+
+
 
 <!-- Pending Orders-->
-<div ng-show=showPending>
+<div ng-show="false">
 
     <div style="clear:both; text-align: center" >
         <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
@@ -79,8 +284,6 @@
                 <dt>{{userMenu.items[userorder.itemId].name}}</dt>
                 <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
                 <dd><strong>x{{userorder.quantity}}</strong></dd>
-                <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
-                <!--<dd>{{userorder.comments}}</dd>-->
             </div>
             <div ng-show="false" style="position: absolute; right: 10px;">
                 <p>
@@ -90,7 +293,6 @@
                     Order No: {{order.orderId}}
                 </h5>
             </div>
-
         </md-card>
     </div>
 

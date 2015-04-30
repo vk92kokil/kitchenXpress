@@ -1,55 +1,165 @@
-<h2 style="text-align: center">
-   {{kitchenid}} orders list
-</h2>
-<div>
+<script>
+    $("[data-toggle=popover]").popover();
+</script>
+<style>
+    .staff-pending{
+        flex-flow: row wrap;
+    }
+    .pending-order{
+        order: 1;
+        border-right: 5px solid #3372df;
+        width: 50%;
+        padding-right: 0px;
+        text-align: center;
 
-    <div style="clear:both; text-align: center" >
-        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
+    }
+    .staff-completed{
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+    .completed-order{
+        order: 2;
+        width: 50%;
+        text-align: center;
+    }
+    .flex-container{
+        display: flex;
+        flex: 1 auto;
+        flex-flow: row wrap;
+        text-align: center;
+        justify-content: space-around;
+        width: 100%;
+    }
+    @media screen and (max-width: 580px){
+
+        .flex-container{
+            display: flex;
+        }
+        .pending-order{
+            order: 1;
+            border-right: 0px solid #ffffff;
+            width: 100%;
+            padding-right: 0px;
+        }
+        .completed-order{
+            order: 2;
+            width: 100%;
+        }
+        main{
+            padding-right: 0%;
+            padding-left: 0%;
+            padding-top: 60px;
+            margin-bottom: 10px;
+        }
+        h2{
+            font-size: 20px;
+        }
+    }
+    .image {
+        position:relative;
+    }
+    .image .text {
+        position:absolute;
+        top:-5px;
+        left:4px;
+        width:20px;
+        text-align: center;
+        color: #4285f4;
+    }
+    .image .order{
+        position:absolute;
+        top:6px;
+        left:32px;
+        width:20px;
+        text-align: center;
+        color: #4285f4;
+    }
+
+</style>
+<div class="flex-container">
+    <div class="pending-order">
+        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
             Pending Orders
         </h3>
-        <md-card class="col-md-12" layout="row" layout-wrap ng-repeat="(oi,order) in allPendingOrder">
+        <div ng-repeat="(oi,order) in allPendingOrder">
 
-            <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+
+        <md-card class="staff-pending">
+
+            <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.get('data').items">
 
                 <dt>{{menu.items[userorder.itemId].name}}</dt>
                 <dt><img class="img-circle" style="width:50px;height:50px" src="{{menu.items[userorder.itemId].imgurl}}"></dt>
                 <dd><strong>x{{userorder.quantity}}</strong></dd>
                 <dd>{{userorder.comments}}</dd>
+            </div>
 
-                <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
-                <!--<dd>{{userorder.comments}}</dd>-->
+            <div hidden>
+                <div class="image" data-toggle="tooltip" data-placement="top" title="{{order.get('tableNumber')}}">
+                    <img src="../images/dining.svg" style="width: 30px;height: 30px;" alt = "Table Number">
+                    <div class="text" hidden>
+                        <strong>{{order.get("tableNumber")}}</strong>
+                    </div>
+                </div>
+                <div class="image" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{{order.get('orderId')}}">
+                    <img src="../images/order.svg" style="width: 30px;height: 30px;" alt = "Order Number">
+                    <div class="order" hidden>
+                        <strong>{{order.get("orderId")}}</strong>
+                    </div>
+                </div>
             </div>
-            <div style="position: absolute;">
-                <p>
-                    <strong>Table no: </strong>{{order.tableNumber}}
-                </p>
-                <p>
-                    Order No:{{order.orderId}}
-                </p>
+
+
+            <div style="position: absolute;" hidden>
+                <div style = "width: 20px; height: 20px; position: relative; background: url('../images/chair.png');">
+                    <strong style="position: absolute;">{{order.get("tableNumber")}}</strong>
+                </div>
+                <small hidden>
+                    <strong>Table no: </strong>{{order.get("tableNumber")}}
+                </small><br>
+                <small>
+                    Order No:{{order.get("orderId")}}
+                </small>
             </div>
-            <div style="position: absolute; top: 35%;right: 10px;">
-                <button ng-click="userOrderCancelled(order)" type="button" class="btn btn-danger" tooltip="Not Available">Not Available</button>
-                <button ng-click="userOrderCompleted(order)"  type="button" class="btn btn-success" tooltip="Order Completed">Done</button>
-            </div>
+
         </md-card>
+            <div style="background: #cac7b0; display: flex; flex-flow: row nowrap; justify-content: space-between; margin-right: 8px; margin-left: 8px; margin-top: -7px;">
+
+                <div class="image" data-toggle="tooltip" data-placement="top" title="{{order.get('tableNumber')}}">
+                    <img src="../images/dining.svg" style="width: 30px;height: 30px;" alt = "Table Number">
+                    <div class="text" hidden>
+                        <strong>{{order.get("tableNumber")}}</strong>
+                    </div>
+                </div>
+                <div class="image" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{{order.get('orderId')}}">
+                    <img src="../images/order.svg" style="width: 30px;height: 30px;" alt = "Order Number">
+                    <div class="order" hidden>
+                        <strong>{{order.get("orderId")}}</strong>
+                    </div>
+                </div>
+
+                <button style="border-radius: 0px; margin-top: -1px;margin-right: -1px;" ng-click="userOrderCancelled(order)" type="button" class="btn btn-danger" tooltip="Not Available">Cancel</button>
+                <button style="border-radius: 0px; margin-top: -1px;margin-right: -1px; width: 30%;" ng-click="userOrderCompleted(order)"  type="button" class="btn btn-success" tooltip="Order Completed">Done</button>
+            </div>
+        </div>
     </div>
 
-    <div style="clear:both; text-align: center" >
-        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">
+    <div class="completed-order">
+        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
             Completed Orders
         </h3>
 
-        <md-card class="col-md-12" layout="row" layout-wrap ng-repeat="(oi,order) in allCompletedOrder">
+        <md-card class="staff-completed" ng-repeat="(oi,order) in allCompletedOrder">
 
             <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
-
                 <dt>{{menu.items[userorder.itemId].name}}</dt>
                 <dt><img class="img-circle" style="width:50px;height:50px" src="{{menu.items[userorder.itemId].imgurl}}"></dt>
                 <dd><strong>x{{userorder.quantity}}</strong></dd>
                 <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
                 <!--<dd>{{userorder.comments}}</dd>-->
             </div>
-            <div style="position: absolute; right: 10px;">
+
+            <div style="align-self: flex-end;text-align: right; margin: 10px;">
                 <h5>
                     Table no: {{order.tableNumber}}
                     <br>
@@ -59,6 +169,7 @@
                     Order No:{{order.orderId}}
                 </h7>
             </div>
+
         </md-card>
     </div>
 </div>

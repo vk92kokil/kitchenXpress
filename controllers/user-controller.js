@@ -1,7 +1,10 @@
 /**
  * Created by vikramaditya on 3/28/15.
  */
+/*TODO
+get pending and completed orders from parse
 
+* */
 app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$cookieStore){
 
     $scope.userId = $rootScope.userId;
@@ -21,6 +24,41 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
     var currentOrder = $cookieStore.get("currentOrder"); //Usr ADD Item, cart order
 
+    $scope.getOrdersList = function() {
+
+        var orders = Parse.Object.extend("Orders");
+        var query = new Parse.Query(orders);
+
+        query.equalTo('kitchenId', $scope.kitchenid);
+        query.equalTo('userId',$scope.userId);
+
+        query.find({
+
+            success: function (results) {
+
+                $scope.$apply(function () {
+
+                    $scope.userPendingOrder = {};
+                    $scope.allCompletedOrder = [];
+
+                    for (var i = 0; i < results.length; i++) {
+                        var oid = results[i].get("orderId");
+
+                        if(results[i].get("state") == "pending"){
+                            $scope.userPendingOrder[oid] = results[i];
+                        }else{
+                            $scope.allCompletedOrder.push(results[i]);
+                        }
+                    }
+                });
+
+            },
+            error: function (error) {
+
+                console.log("Error", error);
+            }
+        });
+    };
     $scope.getDetail = function(ev,itemid,item) {
 
         var uid = $cookieStore.get("userId");
@@ -36,7 +74,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         }
         else{
             $mdDialog.show({
-                templateUrl: '../views/userDetails.html',
+                templateUrl: 'views/userDetails.html',
                 controller: 'detailsModalController',
                 targetEvent: ev
             })
@@ -84,10 +122,11 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                         $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
 
                     }
-                    if(m.senderId == $scope.userId && m.action == "init"){
+                    if(m.senderId == $scope.userId && m.action == "pending"){
 
                         $scope.userPendingOrder[m.orderId] = m;
                         $cookieStore.put("userPendingOrder", $scope.userPendingOrder);
+
                     }
                 });
             }
@@ -96,7 +135,6 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     $scope.getMenu = function() {
 
         var getUrl = url + $scope.kitchenid + "/menu";
-
 
         var MenuObject = Parse.Object.extend("Menu");
         var query = new Parse.Query(MenuObject);
@@ -134,7 +172,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             var order = {
                 "senderId":$scope.userId,
                 "receiverId":"staff",
-                "action":"init",  //init, complete, cancelled
+                "action":"pending",  //pending, complete, cancelled
                 "orderId": current_orderid.toString(),
                 "tableNumber":$scope.tableId,
                 "items": []
@@ -150,10 +188,30 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                 message: order
             });
 
+            var itemObject = new Object();
+            itemObject["items"] = order.items;
+
+            var Request = Parse.Object.extend("Orders");
+            var req = new Request();
+            req.set("kitchenId",$scope.kitchenid);
+            req.set("orderId",current_orderid.toString());
+            req.set("userId",$scope.userId);
+            req.set("data",itemObject);
+            req.set("state","pending");
+            req.set("tableNumber",order.tableNumber);
+
+            console.log("req",req);
+
+            req.save(null, {
+                success: function (order) {
+                    console.log("Order Placed Successfully");
+                },
+                error: function (error) {
+                    console.log("Error placing order",error);
+                }
+            });
             $scope.emptyCart();
         }
-
-
     };
     $scope.emptyCart = function(){
 
@@ -225,7 +283,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         $rootScope.userClickedItem = item;
         $rootScope.userClickedItemid = itemid;
          $mdDialog.show({
-             templateUrl: '../views/userModalContent.html',
+             templateUrl: 'views/userModalContent.html',
              controller: 'userModalController',
              targetEvent: ev
             })

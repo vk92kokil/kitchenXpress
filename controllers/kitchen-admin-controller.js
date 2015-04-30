@@ -5,6 +5,7 @@
 
 
 var PUBNUB_demo;
+var alreadyExists;
 
 app.controller('LoginController', function($scope, $rootScope, $location, $http, $cookieStore) {
 
@@ -72,7 +73,6 @@ app.controller('LoginController', function($scope, $rootScope, $location, $http,
     };
 
 });
-
 app.controller('MenuController', function($scope, $rootScope, $location, $http, $cookieStore) {
 
     $scope.visibility = false;
@@ -90,24 +90,42 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
         $rootScope.kitchenid = kitchenid;
 
         var Menu = Parse.Object.extend("Menu");
-        var query = new Parse.Query(Menu);
+        if(alreadyExists){ // then update Menu
+            var query = new Parse.Query(Menu);
 
-        query.equalTo('kitchenid',kitchenid);
+            query.equalTo('kitchenid',kitchenid);
 
-        query.first().then(function(saveobj){
+            query.first().then(function(saveobj){
 
-            //console.log('Menu saving to server');
+                //console.log('Menu saving to server');
 
-            saveobj.set("data", $rootScope.menu);
+                saveobj.set("data", $rootScope.menu);
 
-            saveobj.save(null,function(){
+                saveobj.save(null,function(menu){
 
-                $scope.$apply(function(){
-                    console.log("done saving");
-                    $scope.getRefreshedMenu();
+                    $scope.$apply(function(){
+                        console.log("done saving");
+                        $scope.getRefreshedMenu();
+                    });
                 });
             });
-        });
+        }else{ // create new Menu
+            var menuObj = new Menu();
+            menuObj.set("kitchenid",kitchenid);
+            menuObj.set("data",$rootScope.menu);
+
+            menuObj.save(null,{
+
+                    success: function(){
+                        alreadyExists = true;
+                        console.log("Created new Menu successfully");
+                        $scope.getRefreshedMenu();
+                    },
+                    error:  function(){
+                        alreadyExists = false;
+                    }
+            });
+        }
     };
     $rootScope.getRefreshedMenu = function() {
 
@@ -446,11 +464,20 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
             query.first({
                 success: function(data) {
                     // The object was retrieved successfully.
-                    var menu = data.get("data");
+                    console.log("MENU",data);
+                    var menu;
+                    if(data == undefined){
+                        menu = {};
+                        menu["items"] = {};
+                        alreadyExists = false;
+                    }else{
+                        menu = data.get("data");
+                        alreadyExists = true;
+                    }
+
                     $scope.$apply(function(){
                         $rootScope.menu = menu;
                         console.log("obj: ",menu);
-
                         $location.path("/menu");
 
                     });
