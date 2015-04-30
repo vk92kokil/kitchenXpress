@@ -321,6 +321,10 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
             $scope.showCart = false;
         }
     };
+    $scope.clearCompleted = function () {
+        $cookieStore.remove("allCompletedOrder");
+        $scope.allCompletedOrder = [];
+    };
 });
 app.controller('detailsModalController',function($scope,$mdDialog,$rootScope){
 

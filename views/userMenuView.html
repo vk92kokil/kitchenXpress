@@ -209,23 +209,25 @@
             <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
                 Pending Orders
             </h3>
-            <md-card layout="row" layout-wrap ng-repeat="(oi,order) in userPendingOrder">
+            <md-card style="display: flex; flex-flow: row nowrap;justify-content: space-between" ng-repeat="(oi,order) in userPendingOrder">
 
-                <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+                <div style="display: flex; flex-flow: row nowrap;justify-content: flex-start">
+                    <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
 
-                    <dt>{{userMenu.items[userorder.itemId].name}}</dt>
-                    <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
-                    <dd><strong>x{{userorder.quantity}}</strong></dd>
+                        <dt>{{userMenu.items[userorder.itemId].name}}</dt>
+                        <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
+                        <dd><strong>x{{userorder.quantity}}</strong></dd>
+                    </div>
+                    <div ng-show="false" style="position: absolute; right: 10px;">
+                        <p>
+                            Action: {{order.action}}
+                        </p>
+                        <h5>
+                            Order No: {{order.orderId}}
+                        </h5>
+                    </div>
                 </div>
-                <div ng-show="false" style="position: absolute; right: 10px;">
-                    <p>
-                        Action: {{order.action}}
-                    </p>
-                    <h5>
-                        Order No: {{order.orderId}}
-                    </h5>
-                </div>
-                <div class="flex-item" style="display: flex; justify-content: flex-end">
+                <div class="flex-item" style="position: relative;align-self: center;margin-right: 10px;">
                      <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                 </div>
             </md-card>
@@ -233,20 +235,22 @@
 
         <div style="clear:both; text-align: center">
             <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
-                Completed Orders <span style="float: right;"><small style="color: #000000;">Clear</small></span>
+                Completed Orders <span style="float: right;" ng-click="clearCompleted()"><small style="color: #000000; cursor: pointer;">Clear</small></span>
             </h3>
-            <md-card class="flex-item" style="display: flex;justify-content: flex-start;" ng-repeat="(oi,order) in allCompletedOrder">
+            <md-card class="flex-item" style="display: flex;flex-flow: row nowrap; justify-content: space-between;" ng-repeat="(oi,order) in allCompletedOrder">
 
-                <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
+                <div style="display: flex; flex-flow: row nowrap;justify-content: flex-start">
+                    <div style="display: inline-block;margin:0 10px" ng-repeat="(item,userorder) in order.items">
 
-                    <dt>{{userMenu.items[userorder.itemId].name}}</dt>
-                    <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
-                    <dd><strong>x{{userorder.quantity}}</strong></dd>
-                    <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
-                    <!--<dd>{{userorder.comments}}</dd>-->
+                        <dt>{{userMenu.items[userorder.itemId].name}}</dt>
+                        <dt><img class="img-circle" style="width:50px;height:50px" src="{{userMenu.items[userorder.itemId].imgurl}}"></dt>
+                        <dd><strong>x{{userorder.quantity}}</strong></dd>
+                        <!--<dd>Quantity : {{userorder.itemId}}</dd>-->
+                        <!--<dd>{{userorder.comments}}</dd>-->
+                    </div>
+
                 </div>
-
-                <div class="flex-item" style="display: flex; justify-content: flex-start">
+                <div class="flex-item" style="position: relative;align-self: center;margin-right: 10px;">
                     <div ng-show="false">
                         Status: {{order.action}}
                     </div>
