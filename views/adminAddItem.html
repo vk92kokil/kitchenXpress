@@ -1,6 +1,7 @@
+
 <div class = "row">
     <div>
-        <h3 class="panel-heading" style="background: #3372df; color: white;height: 50px;">
+        <h3 class="panel-heading theme-color" style="color: white;height: 40px;">
             Item Details ({{itemid}})
         </h3>
         <md-card class="col-md-12" layout="row" layout-wrap>
@@ -14,26 +15,29 @@
                     <input type="file" file-model="myFile" id = "exampleInputFile"/>
                 </div>
                 <br>
-                <button class="btn btn-block btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
+                <button style= "border: 1px solid #34495E;border-radius: 0px;" class="btn btn-block btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
                 <br>
-                <button type="button" class="btn btn-block btn-info"ng-click="uploadImage()">upload</button>
+                <button type="button" class="btn btn-block btn-info" style="border-radius: 0px; background: #34495E;border: none;" ng-click="uploadImage()">upload</button>
             </div>
             <div  flex>
                 <div style="margin:10px">
                     <input type="text" class="form-control" placeholder="Item name" ng-model="item.name"><br>
 
-                    <textarea type="text" class="form-control" placeholder="Description" ng-model="item.desc"></textarea><br>
+                    <textarea type="text" style="height: 150px;" class="form-control" placeholder="Description" ng-model="item.desc"></textarea><br>
                 </div>
             </div>
         </md-card>
     </div>
 
-        <div class="col-md-6">
-            <button type="button" ng-click="addClicked()" class="btn btn-block btn-primary">Add</button>
+    <div class="flex-container">
+        <div class="flex-item" style="order: 1;">
+            <button type="button" ng-click="cancel()" class="btn-block flat-btn-cancel">Cancel</button>
         </div>
-        <div class="col-md-6">
-            <button type="button" ng-click="cancel()" class="btn btn-block btn-danger">Cancel</button>
+
+        <div class="flex-item" style="order: 2;">
+            <button type="button" ng-click="addClicked()" class="btn btn-block flat-btn-done">Add</button>
         </div>
+    </div>
 
 </div>
 <script>
@@ -60,6 +64,26 @@
         background: transparent;
         cursor: inherit;
         display: block;
+    }
+    .flex-container{
+        display: flex;
+        flex-flow: row wrap;
+        flex: 1 auto;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .flex-item{
+        width: 48%;
+        margin: 1% 1%;
+    }
+    @media screen and (max-width: 585px) {
+        .flex-container{
+            flex-flow: row-reverse wrap-reverse;
+        }
+        .flex-item{
+            width: 100%;
+            margin: 1% 1%;
+        }
     }
 </style>
 

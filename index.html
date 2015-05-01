@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app = "myApp">
+<html ng-app = "myApp" style="background-color: #F4EDED">
   <head>
 
     <meta charset="utf-8">
@@ -10,16 +10,16 @@
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <link rel="icon" sizes="148x212" href="images/logo2.png">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Web Starter Kit">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/logo2.png">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileImage" content="images/logo2.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!--Angular modules-->
@@ -52,7 +52,10 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/BootSideMenu.css">
+
     <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/BootSideMenu.js"></script>
 
     <script src = "app.js"></script>
     <script src = "controllers/custom-directive.js"></script>
@@ -61,12 +64,19 @@
     <script src = "controllers/user-controller.js"></script>
     <script src = "controllers/kitchen-staff-controller.js"></script>
 
+
+
+    <link rel="stylesheet" href="styles/custom.css">
+
   </head>
-  <body ng-controller="mainController">
-    <header class="app-bar promote-layer">
-      <div class="app-bar-container">
+  <body ng-controller="mainController" style="background: none;">
+    <header class="app-bar promote-layer theme-color">
+
+      <div class="app-bar-container theme-color">
+
         <!--<button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>-->
-        <h1 class="logo">Kitchen <strong>Xpress</strong></h1>
+        <!-- <span><img hidden class="main-logo" style="margin-top: 30px; margin-right: 10px; float: left; width: 37px; height: 53px;" src="images/logo.png">-->
+        <h1 class="logo theme-color">Kitchen <strong>Xpress</strong></h1>
         <section  class="app-bar-actions">
           <!-- Put App Bar Buttons Here -->
           <button ng-show = "showMenu" ng-click="back()" ><strong>Menu</strong></button>
@@ -76,7 +86,7 @@
       </div>
     </header>
 
-      <main>
+      <main >
         <div ng-view></div>
         <!--<h1 id="hello">Hello!</h1>-->
         <!--<p>Welcome to Web Starter Kit.</p>-->

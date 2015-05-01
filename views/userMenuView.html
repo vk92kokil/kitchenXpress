@@ -40,6 +40,23 @@
         flex-flow: column wrap;
         justify-content: space-around;
     }
+    .menuClass{
+        order: 1;
+        border-right: 5px solid #C0392B;
+        width: 50%;
+        padding-right: 0px;
+    }
+    .cartClass{
+        order: 2; width: 50%;
+    }
+    .flexContainer{
+        display: flex;
+        flex: 1 auto;
+        flex-flow: row wrap;
+        text-align: center;
+        justify-content: space-around;
+        width: 100%;
+    }
     @media screen and (max-width: 480px) {
         .flex-container{
 
@@ -58,23 +75,7 @@
         }
 
     }
-    .menuClass{
-        order: 1;
-        border-right: 5px solid #3372df;
-        width: 50%;
-        padding-right: 0px;
-    }
-    .cartClass{
-        order: 2; width: 50%;
-    }
-    .flexContainer{
-        display: flex;
-        flex: 1 auto;
-        flex-flow: row wrap;
-        text-align: center;
-        justify-content: space-around;
-        width: 100%;
-    }
+
     @media screen and (max-width: 580px) {
         .flexContainer{
             display: flex;
@@ -91,8 +92,9 @@
         }
     }
 </style>
+<div style="display: flex; flex-flow: row nowrap; justify-content: flex-end;">
 
-<div style="float: right;text-align: right">
+<div style="float: right;text-align: right" hidden>
     <small>UserId: {{userId}}</small><br>
     <small>Table No. <input type="text" size="4" ng-model="tableId"></small>
 </div>
@@ -143,10 +145,16 @@
     </div>
 </div>
 
+<div id="sideMenu" style= "background-color: #F4EDED;height: 40%;margin-top: 20%; text-align: center;" hidden>
+    <div>
+        <strong>User Id </strong><br>
+        <strong>Table no.</strong>
+    </div>
+</div>
 
 <div class = "flexContainer">
     <div class = "menuClass">
-        <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+        <h3 class="panel-heading theme-color" style="color: white;height: 40px; margin: 10px auto; width: 95%;">
             Menu
         </h3>
         <md-card class="myMenuItem flex-item" ng-repeat="(itemid,item) in userMenu.items"  ng-click="showAlert($event,itemid,item)">
@@ -166,8 +174,8 @@
 
     <div class = "cartClass">
         <div ng-show= showCart class="flex-item">
-            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
-                Cart Items
+            <h3 class="panel-heading theme-color" style="color: white;height: 40px; margin: 10px auto; width: 95%;">
+                Tray
             </h3>
                 <div style="text-align: center">
                     <!--<h3 class="panel-heading" style="background: #3372df; color: white;height: 40px;">-->
@@ -185,7 +193,7 @@
                             <!--<dd>{{userorder.comments}}</dd>-->
                         </div>
                         <small style="text-align: center; margin: 10px;">{{order.comments}}</small>
-                        <button ng-click="removeUserItem(order)" type="button" class="btn btn-default" style="margin-top: 5%; margin-right: 5%; width: 50px; height: 50px;">
+                        <button ng-click="removeUserItem(order)" type="button" class="cross-btn">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </button>
                     </md-card>
@@ -201,12 +209,12 @@
                     <br>
                 </div>
             <div style="text-align: center">
-                <button style="margin: 10px auto;width: 60%;border-radius: 0px;" type="button" ng-click="placeUserOrder()" class="btn btn-block btn-success">Place Order</button>
+                <button style="margin: 10px auto;width: 60%;border-radius: 0px; background-color: #1abc9c;font-size: 17px; font-family: Lato, Helvetica, Arial, sans-serif; color: #ffffff;" type="button;" ng-click="placeUserOrder()" class="btn btn-block">Place Order</button>
             </div>
         </div>
 
         <div style="text-align: center" >
-            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+            <h3 class="panel-heading theme-color" style="color: white;height: 40px; margin: 10px auto; width: 95%;">
                 Pending Orders
             </h3>
             <md-card style="display: flex; flex-flow: row nowrap;justify-content: space-between" ng-repeat="(oi,order) in userPendingOrder">
@@ -227,14 +235,14 @@
                         </h5>
                     </div>
                 </div>
-                <div class="flex-item" style="position: relative;align-self: center;margin-right: 10px;">
+                <div class="flex-item" style="position: relative;align-self: center;margin-right: 15px;">
                      <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                 </div>
             </md-card>
         </div>
 
         <div style="clear:both; text-align: center">
-            <h3 class="panel-heading" style="background: #3372df; color: white;height: 40px; margin: 10px auto; width: 95%;">
+            <h3 class="panel-heading theme-color" style="color: white;height: 40px; margin: 10px auto; width: 95%;">
                 Completed Orders <span style="float: right;" ng-click="clearCompleted()"><small style="color: #000000; cursor: pointer;">Clear</small></span>
             </h3>
             <md-card class="flex-item" style="display: flex;flex-flow: row nowrap; justify-content: space-between;" ng-repeat="(oi,order) in allCompletedOrder">
@@ -329,5 +337,7 @@
             </div>
         </md-card>
     </div>
+
+</div>
 
 </div>

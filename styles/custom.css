@@ -1,0 +1,53 @@
+md-card{
+    background: white;
+}
+.theme-color{
+    background: #C0392B;
+}
+.cross-btn{
+    background: transparent;
+    align-self: center;
+    width: 50px;
+    height: 50px;
+    border-width: 0px;
+    color: #aaa;
+
+}
+.cross-btn :hover{
+    color: #000000;
+}
+.flat-btn-success{
+    background: #1ABC9C;
+    color: #ffffff;
+}
+.btn.focus, .btn:focus, .btn:hover{
+    color: #ffffff;
+    text-decoration: none;
+}
+.flat-btn-primary{
+    background: #7F8C8D;
+    color: #ffffff;
+}
+.flat-btn-done{
+    background: #C0392B;
+    border-radius: 0px;
+    color: #ffffff;
+}
+.flat-btn-cancel{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background: #ffffff;
+    border-radius: 0px;
+    border: 1px solid #C0392B;
+    color: #C0392B;
+}

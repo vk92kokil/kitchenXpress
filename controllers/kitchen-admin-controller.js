@@ -74,7 +74,6 @@ app.controller('LoginController', function($scope, $rootScope, $location, $http,
 
 });
 app.controller('MenuController', function($scope, $rootScope, $location, $http, $cookieStore) {
-
     $scope.visibility = false;
     $scope.menu = $rootScope.menu;
     $scope.addItemClicked = function() {
@@ -90,7 +89,7 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
         $rootScope.kitchenid = kitchenid;
 
         var Menu = Parse.Object.extend("Menu");
-        if(alreadyExists){ // then update Menu
+        if($rootScope.alreadyExists){ // then update Menu
             var query = new Parse.Query(Menu);
 
             query.equalTo('kitchenid',kitchenid);
@@ -117,12 +116,12 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
             menuObj.save(null,{
 
                     success: function(){
-                        alreadyExists = true;
+                        $rootScope.alreadyExists = true;
                         console.log("Created new Menu successfully");
                         $scope.getRefreshedMenu();
                     },
                     error:  function(){
-                        alreadyExists = false;
+                        $rootScope.alreadyExists = false;
                     }
             });
         }
@@ -177,7 +176,9 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
         delete $rootScope.menu.items[itemId];
         delete $scope.menu.items[itemId];
         $scope.menu = $rootScope.menu;
-    };
+        $rootScope.itemCount = angular.copy($rootScope.itemCount) - 1;
+
+            };
     if (!$scope.menu) {
         var kitchenid = $cookieStore.get("kitchenid");
         $rootScope.kitchenid = kitchenid;
@@ -202,6 +203,7 @@ app.controller('addItemViewController', function($scope, $rootScope, $location, 
     $scope.addClicked = function() {
         $rootScope.menu.items[$scope.itemid] = $scope.item;
         $rootScope.itemid = $scope.itemid;
+        $rootScope.itemCount = angular.copy($rootScope.itemCount) + 1;
         $location.path("/menu");
     };
 
@@ -322,9 +324,11 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
         $scope.roleId = "";
 
         $cookieStore.remove("roleId");
+
         //$cookieStore.remove("userId");//
-        $cookieStore.remove("tableId");//
+        //$cookieStore.remove("tableId");
         //$cookieStore.remove("kitchenid");
+
         $cookieStore.remove("allCompletedOrder");
 
         $location.path("/login");
@@ -469,15 +473,17 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                     if(data == undefined){
                         menu = {};
                         menu["items"] = {};
-                        alreadyExists = false;
+                        $rootScope.alreadyExists = false;
+                        $rootScope.itemCount = 0;
                     }else{
                         menu = data.get("data");
-                        alreadyExists = true;
+                        $rootScope.alreadyExists = true;
+                        $rootScope.itemCount = Object.keys(menu.items).length;
                     }
 
                     $scope.$apply(function(){
                         $rootScope.menu = menu;
-                        console.log("obj: ",menu);
+                        console.log("obj: ",menu,menu.count,menu.length,(menu.items == ''));
                         $location.path("/menu");
 
                     });
@@ -531,7 +537,6 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                     case "Staff": // Staff
                         $scope.kitchenid = kitchenid;
                         $rootScope.kitchenid = $scope.kitchenid;
-
                         $rootScope.showToolBar = true;
                         $location.path("/staffMenu");
                         break;

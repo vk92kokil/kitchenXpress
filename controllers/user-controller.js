@@ -21,6 +21,11 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     $scope.showCart = false;
 
     //$scope.userMenu = tmp_menu; //delete this after testing
+    //$('#sideMenu').BootSideMenu();
+    $('#sideMenu').BootSideMenu({
+        side:"right",
+        autoClose:true
+    });
 
     var currentOrder = $cookieStore.get("currentOrder"); //Usr ADD Item, cart order
 
@@ -88,7 +93,8 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
                     }
                 }, function() {
-                    $scope.getDetail();
+                    //$scope.tableId = Math.random();
+                    //$scope.getDetail();
                 });
         }
         if(!uid){
@@ -166,51 +172,57 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     };
     $scope.placeUserOrder = function(){
 
-        if($scope.userAddItem.length != 0){ // dnt accept null orders
+        if($scope.tableId) {
 
-            var current_orderid = Math.floor(Date.now());
-            var order = {
-                "senderId":$scope.userId,
-                "receiverId":"staff",
-                "action":"pending",  //pending, complete, cancelled
-                "orderId": current_orderid.toString(),
-                "tableNumber":$scope.tableId,
-                "items": []
-            };
+            if ($scope.userAddItem.length != 0) { // dnt accept null orders
 
-            $scope.showPending = true;
-            order.items =  angular.copy($scope.userAddItem);
+                var current_orderid = Math.floor(Date.now());
+                var order = {
+                    "senderId": $scope.userId,
+                    "receiverId": "staff",
+                    "action": "pending",  //pending, complete, cancelled
+                    "orderId": current_orderid.toString(),
+                    "tableNumber": $scope.tableId,
+                    "items": []
+                };
 
-            $scope.tableNumber.push(order.tableNumber);// dnt knw when and why i wrote this line
+                $scope.showPending = true;
+                order.items = angular.copy($scope.userAddItem);
 
-            PUBNUB_demo.publish({
-                channel: $rootScope.kitchenid,
-                message: order
-            });
+                $scope.tableNumber.push(order.tableNumber);// dnt knw when and why i wrote this line
 
-            var itemObject = new Object();
-            itemObject["items"] = order.items;
+                PUBNUB_demo.publish({
+                    channel: $rootScope.kitchenid,
+                    message: order
+                });
 
-            var Request = Parse.Object.extend("Orders");
-            var req = new Request();
-            req.set("kitchenId",$scope.kitchenid);
-            req.set("orderId",current_orderid.toString());
-            req.set("userId",$scope.userId);
-            req.set("data",itemObject);
-            req.set("state","pending");
-            req.set("tableNumber",order.tableNumber);
+                var itemObject = new Object();
+                itemObject["items"] = order.items;
 
-            console.log("req",req);
+                var Request = Parse.Object.extend("Orders");
+                var req = new Request();
+                req.set("kitchenId", $scope.kitchenid);
+                req.set("orderId", current_orderid.toString());
+                req.set("userId", $scope.userId);
+                req.set("data", itemObject);
+                req.set("state", "pending");
+                req.set("tableNumber", order.tableNumber);
 
-            req.save(null, {
-                success: function (order) {
-                    console.log("Order Placed Successfully");
-                },
-                error: function (error) {
-                    console.log("Error placing order",error);
-                }
-            });
-            $scope.emptyCart();
+                console.log("req", req);
+
+                req.save(null, {
+                    success: function (order) {
+                        console.log("Order Placed Successfully");
+                    },
+                    error: function (error) {
+                        console.log("Error placing order", error);
+                    }
+                });
+                $scope.emptyCart();
+            }
+        }
+        else if($scope.tableId == "" || $scope.tableId == undefined){
+            window.alert("Enter Table Number");
         }
     };
     $scope.emptyCart = function(){

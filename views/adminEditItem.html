@@ -5,7 +5,7 @@
             <h3 class="panel-heading" style="background: #3372df; color: white;height: 50px;">
                 Item Details ({{currentItemId}})
             </h3>
-            <md-card class="col-md-12" layout="row" layout-wrap>
+            <md-card layout="row" layout-wrap>
                 <div  flex="33" style="padding: 10px"><img ng-src= "{{item.imgurl}}" style="width: 100%;" class="img-thumbnail img-responsive" alt="Responsive image">
                     <!--<label for="exampleInputFile1">Upload Image</label>-->
                     <div ng-show = "visibility" layout="row" layout-sm="column" layout-align="space-around" style = "transform: translate(0%,-300%);">
@@ -16,9 +16,9 @@
                         <input type="file" file-model="myFile" id = "exampleInputFile"/>
                     </div>
                     <br>
-                    <button class="btn btn-block btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
+                    <button style= "border: 1px solid #34495E;border-radius: 0px;" class="btn btn-block btn-default" ng-click="chooseFile()">{{addItem_fileName}}</button>
                     <br>
-                    <button type="button" class="btn btn-block btn-info"ng-click="uploadImage()">upload</button>
+                    <button type="button" style="border-radius: 0px; background: #34495E;border: none;" class="btn btn-block btn-info"ng-click="uploadImage()">upload</button>
                 </div>
                 <div  flex>
                     <div style="margin:10px">
@@ -31,6 +31,6 @@
         </div>
     </div>
     <div>
-        <button type="button" ng-click="edit()" class="btn btn-block btn-primary">OK</button>
+        <button type="button" ng-click="edit()" style="width: 98%; margin: 1% 1%;" class="btn btn-block flat-btn-done">OK</button>
     </div>
 </div>

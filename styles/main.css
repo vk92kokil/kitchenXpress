@@ -1,6 +1,12 @@
 @charset "UTF-8";
+
 html {
+    height: 100%;
     color:#222;
+}
+
+body {
+    min-height: 100%;
 }
 
 a:visited {
@@ -3012,7 +3018,7 @@ body.open, .app-bar {
     position:fixed;
     top:0;
     left:0;
-    background-color:#4285f4;
+    background-color: #b90606;
     z-index:1;
 }
 
@@ -3199,7 +3205,7 @@ main {
         max-width:864px;
         padding:0 16px;
         box-sizing:border-box;
-        background-color:#4285f4;
+        background-color: #b90606;
     }
 
     .app-bar .logo {

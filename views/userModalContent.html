@@ -1,7 +1,44 @@
 <md-dialog aria-label="Item" style="width: 40%">
     <md-content class="sticky-container">
 
-        <div style="float: left">
+        <div style="display: flex;flex-flow: row wrap;justify-content: space-between;width: 100%;">
+            <div class="modal-items" style="display: flex; flex-flow: column nowrap; justify-content: space-around; order: 1;">
+                <div>
+                    <img src="{{item.imgurl}}" style="width: 100px;height: 100px;">
+                </div>
+                <div style="display: flex; flex-flow: column wrap; justify-content: space-around; margin-right: 10px;">
+                    <h5>{{item.name}}</h5>
+                    <small style="text-align: justify">
+                        {{item.desc}}
+                    </small>
+                </div>
+            </div>
+
+            <div class="modal-items" style="display: flex; flex-flow: column nowrap; justify-content: space-around; order: 2;">
+                <div>
+                    <form>
+                        <div class="form-group" style="text-align: right">
+                            <b style="color: #C0392B">X </b><input style="width: 35px;" size="4" type="number"  id="quantity" placeholder="Quantity" ng-model="userAddItem.quantity">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="sr-only" for="description">Description</label>
+                            <textarea type="text" class="form-control" id="description" placeholder="Comments" ng-model = "userAddItem.comments" ></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div style="display: flex; flex-flow: row wrap-reverse; justify-content: space-between">
+                    <button style="order: 1;" ng-click="answer('cancel')" class="btn-block flat-btn-cancel flex-controls">
+                        Cancel
+                    </button>
+                    <button style="order: 2;" ng-click="answer('add')" class="btn flat-btn-done flex-controls">
+                        OK
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div style="float: left" hidden>
             <div>
                 <img src="{{item.imgurl}}" style="width: 100px;height: 100px;">
             </div>
@@ -13,33 +50,46 @@
             </div>
         </div>
 
-        <div style="float: right">
+        <div style="float: right" hidden>
             <form>
                 <div class="form-group" style="text-align: right">
                     <!--<label class="sr-only" for="quantity">Quantity</label>-->
                     <!--<input type="number" class="form-control" id="quantity1" placeholder="Quantity" ng-model="userAddItem.quantity">-->
-                    <b>X </b><input style="width: 35px;" size="4" type="number"  id="quantity" placeholder="Quantity" ng-model="userAddItem.quantity">
+                    <b style="color: #C0392B">X </b><input style="width: 35px;" size="4" type="number"  id="quantity1" placeholder="Quantity" ng-model="userAddItem.quantity">
                 </div>
 
                 <div class="form-group">
                     <label class="sr-only" for="description">Description</label>
-                    <textarea type="text" class="form-control" id="description" placeholder="Comments" ng-model = "userAddItem.comments" ></textarea>
+                    <textarea type="text" class="form-control" id="description1" placeholder="Comments" ng-model = "userAddItem.comments" ></textarea>
                 </div>
             </form>
             <div layout="row">
                 <span flex></span>
-                <button style="margin-right: 10px;" ng-click="answer('cancel')" class="btn-lg btn-primary">
+                <button style="margin-right: 10px;" ng-click="answer('cancel')" class="btn-block flat-btn-cancel">
                     Cancel
                 </button>
-                <button ng-click="answer('add')" class="btn-lg btn-danger">
+                <button ng-click="answer('add')" style="width: 100%;" class="btn flat-btn-done">
                     OK
                 </button>
             </div>
         </div>
-
-        <!--<div class="dialog-content">-->
-
-        <!--</div>-->
     </md-content>
-
 </md-dialog>
+<style>
+
+    .flex-controls{
+        width: 48%;
+        margin: 1% 1%;
+    }
+    .modal-items{
+        width: 50%;
+    }
+    @media screen and (max-width: 850px){
+        .modal-items{
+            width: 100%;
+        }
+        .flex-controls{
+            width: 100%;
+        }
+    }
+</style>
