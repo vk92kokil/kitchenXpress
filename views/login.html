@@ -19,21 +19,30 @@
     </div>
 
     <div layout="row" layout-margin>
-        <md-card flex flex-order = "1">
-            <img class="img-responsive" ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
-            <h4 style="text-align: center">User</h4>
-        </md-card>
 
-        <md-card flex flex-order= "2">
-            <img class="img-responsive" ng-click="login('Admin')" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png" alt="Washed Out">
-            <h4 style="text-align: center">Admin</h4>
-        </md-card>
+        <div>
+            <button style="">
 
-        <md-card flex flex-order ="3">
-            <!--<img style = "width:100px; height: 100px;" src = "../images/logo2.png">-->
-            <img class="img-responsive" ng-click="login('Staff')" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png" alt="Washed Out">
-            <h4 style="text-align: center">Staff</h4>
-        </md-card>
+            </button>
+        </div>
+        <div ng-show="false" style="display: flex; flex-flow: row; align-content: space-between; width: 100%;">
+            <md-card flex flex-order = "1">
+                <img class="img-responsive" ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
+                <h4 style="text-align: center">User</h4>
+            </md-card>
+
+            <md-card flex flex-order= "2">
+                <img class="img-responsive" ng-click="login('Admin')" src="http://icons.iconarchive.com/icons/aha-soft/free-large-boss/128/Admin-icon.png" alt="Washed Out">
+                <h4 style="text-align: center">Admin</h4>
+            </md-card>
+
+            <md-card flex flex-order ="3">
+                <!--<img style = "width:100px; height: 100px;" src = "../images/logo2.png">-->
+                <img class="img-responsive" ng-click="login('Staff')" src="http://icons.iconarchive.com/icons/iconshock/real-vista-jobs/128/chef-icon.png" alt="Washed Out">
+                <h4 style="text-align: center">Staff</h4>
+            </md-card>
+        </div>
+
 
         <div ng-show="false">
                 <input ng-click="login('User')"  class="col-md-2 btn" type="image" id="user" style="border: solid black 1px;" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png"/>
