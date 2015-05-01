@@ -1,6 +1,6 @@
-<md-dialog aria-label="Item" style="width: 40%">
+<md-dialog aria-label="Item" style="width: 20%; height: 18%;">
     <md-content class="sticky-container">
-        <h2>Enter Details</h2>
+        <!--<h2>Table Number</h2>-->
         <!--<md-subheader class="md-sticky-no-effect">Mango (Fruit)</md-subheader>-->
         <div class="dialog-content">
             <form>
@@ -10,17 +10,28 @@
                     <!--<input type="text" class="form-control" id="userId" placeholder="UserId" ng-model = "userIdInput">-->
                 <!--</div>-->
 
-                <div class="form-group">
-                    <label class="sr-only" for="tableId">Table No.</label>
-                    <textarea type="text" class="form-control" id="tableId" placeholder="Table No." ng-model = "tableIdInput"></textarea>
+                <div>
+                    <label class="sr-only" for="tableId">Table Number</label>
+                    <input type="text" id = "tableId" class="table-input input-lg form-control" placeholder="Table Number" ng-model = "tableIdInput">
+                    <!--<textarea type="text" class="form-control input-lg table-input" id="tableId" placeholder="Table Number" ng-model = "tableIdInput"></textarea>-->
                 </div>
+                <button style="width: 100%; margin-top: 10px;" ng-click="answer('ok')" class="btn-lg flat-btn-cancel">
+                    OK
+                </button>
             </form>
         </div>
     </md-content>
-    <div class="md-actions" layout="row">
-        <span flex></span>
-        <button ng-click="answer('ok')" class="btn-lg btn-danger">
-            OK
-        </button>
-    </div>
+    <!--<div class="md-actions" layout="row">-->
+        <!--<button style="width: 100%;" ng-click="answer('ok')" class="btn-lg flat-btn-cancel">-->
+            <!--OK-->
+        <!--</button>-->
+    <!--</div>-->
 </md-dialog>
+<style>
+.table-input{
+
+}
+    .table-input:focus{
+        border-color: ;
+    }
+</style>

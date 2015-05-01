@@ -21,7 +21,6 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     $scope.showCart = false;
 
     //$scope.userMenu = tmp_menu; //delete this after testing
-    //$('#sideMenu').BootSideMenu();
     $('#sideMenu').BootSideMenu({
         side:"right",
         autoClose:true
@@ -126,6 +125,8 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                         $scope.allCompletedOrder.push(m);
                         $cookieStore.put("userPendingOrder", $scope.userPendingOrder);
                         $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
+                        console.log($scope.allCompletedOrder);
+                        console.log($scope);
 
                     }
                     if(m.senderId == $scope.userId && m.action == "pending"){
@@ -259,7 +260,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
     };
     if(currentOrder){
-
+        removeCSS();
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
         $scope.userItemCount = parseInt($cookieStore.get("currentItemCount"));
@@ -279,7 +280,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         }
     }
     else{
-
+        removeCSS();
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
         //$scope.userId = $cookieStore.get("userId");
@@ -380,3 +381,8 @@ app.controller('userModalController',function($scope,$mdDialog,$rootScope){
         $mdDialog.hide(answer);
     };
 });
+removeCSS = function(){
+    $('body').removeClass('banner');
+    $('body').addClass('no-bg');
+    $('#overlay').removeClass('overlay');
+};

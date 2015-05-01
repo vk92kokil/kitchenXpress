@@ -184,6 +184,7 @@ app.controller('MenuController', function($scope, $rootScope, $location, $http, 
         $rootScope.kitchenid = kitchenid;
         $scope.kitchenid = kitchenid;
         $scope.visibility = true;
+        removeCSS();
         $scope.getRefreshedMenu();
     }
 });
@@ -296,7 +297,6 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
     $scope.menuLogout = "Logout";
     $scope.menuBack = "Back";
 
-
     $rootScope.showToolBar = false;
     $rootScope.showMenu = false;
     var rid = $cookieStore.get("roleId");
@@ -308,6 +308,11 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
     else if(rid == "Staff" || rid == "User"){
         $rootScope.showToolBar = true;
     }
+    $scope.setCss = function(){
+        $('body').removeClass('no-bg');
+        $('body').addClass('banner');
+        $('#overlay').addClass('overlay');
+    };
     $scope.logout = function() {
 
         $rootScope.showToolBar = false;
@@ -328,7 +333,7 @@ app.controller('mainController', function($rootScope, $cookieStore, $scope, $loc
         //$cookieStore.remove("userId");//
         //$cookieStore.remove("tableId");
         //$cookieStore.remove("kitchenid");
-
+        $scope.setCss();
         $cookieStore.remove("allCompletedOrder");
 
         $location.path("/login");
@@ -484,6 +489,7 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                     $scope.$apply(function(){
                         $rootScope.menu = menu;
                         console.log("obj: ",menu,menu.count,menu.length,(menu.items == ''));
+                        removeCSS();
                         $location.path("/menu");
 
                     });
@@ -556,11 +562,8 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                 window.alert("Empty kitchen id");
                 $location.path("/login");
             }else{
-                // show logging in
                 localStorage.setItem("kitchenid",$scope.kitchenid);
-
                 $rootScope.showToolBar = true;
-
                 switch (roleId){
                     case "Admin": //Admin
                         $rootScope.showMenu = true;
@@ -582,5 +585,10 @@ app.controller('loginController',function($rootScope, $cookieStore, $scope, $loc
                         $location.path("/userMenu");
                 }
             }
-        }
+        };
 });
+removeCSS = function(){
+    $('body').removeClass('banner');
+    $('body').addClass('no-bg');
+    $('#overlay').removeClass('overlay');
+};

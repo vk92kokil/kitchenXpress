@@ -15,17 +15,23 @@
 
     <div class="form-group" style="margin-top: 20%">
         <!--<h4 style="text-align: center"><b>KITCHEN ID</b></h4>-->
-        <input style="text-align: center" class="form-control input-lg" id="inputlg" type="text" placeholder="Enter Kitchen ID" ng-model="kitchenid">
+        <input class="form-control input-lg kitchen-input" id="inputlg" type="text" placeholder="Enter Kitchen ID" ng-model="kitchenid">
     </div>
 
-    <div layout="row" layout-margin>
+    <div>
 
-        <!--<div>-->
-            <!--<button style="">-->
-                <!-- -->
-            <!--</button>-->
-        <!--</div>-->
-        <div style="display: flex; flex-flow: row; align-content: space-between; width: 100%;">
+        <div class = "category-container" style="display: flex; flex-flow: row wrap; justify-content: space-between">
+            <button class="home-btn" ng-click="login('Admin')">
+                Administrator
+            </button>
+            <button class="home-btn" ng-click="login('Staff')">
+                Staff
+            </button>
+            <button class="home-btn" ng-click="login('User')">
+                User
+            </button>
+        </div>
+        <div ng-show="false" style="display: flex; flex-flow: row; align-content: space-between; width: 100%;">
             <md-card flex flex-order = "1">
                 <img class="img-responsive" ng-click="login('User')" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/User-Group-icon.png" alt="Washed Out">
                 <h4 style="text-align: center">User</h4>
@@ -63,5 +69,33 @@
 
             <!--<button type="submit" class="btn btn-default" ng-click="login(roleId)"> Submit </button>-->
     </div>
-
-</form>
+<style>
+    .home-btn{
+        border: 2px solid #C0392B;
+        padding: 10px 40px;
+        background: transparent;
+        width: 33%;
+        border-radius: 25px;
+        color: #C0392B;
+    }
+    .home-btn:hover{
+        color: #ffffff;
+        background: #C0392B;
+    }
+    .kitchen-input{
+        background: transparent;
+        text-align: center;
+    }
+    .kitchen-input:focus{
+        border-color: darkgreen;
+        box-shadow: none;
+        color: #ffffff;
+    }
+    @media screen and (max-width: 585px){
+        .home-btn{
+            margin: 1% 1%;
+            width: 100%;
+        }
+    }
+</style>
+<!--</form>-->
