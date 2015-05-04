@@ -13,7 +13,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     $scope.userPendingOrder = {};
     $scope.orderId = [];
     $scope.tableNumber = [];
-    $scope.allCompletedOrder = [];
+    $scope.allCompletedOrder = {};
     $scope.showPending = false;
     $scope.userItemCount = 0;
     $scope.userQuantityCount = 0;
@@ -43,7 +43,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                 $scope.$apply(function () {
 
                     $scope.userPendingOrder = {};
-                    $scope.allCompletedOrder = [];
+                    $scope.allCompletedOrder = {};
 
                     for (var i = 0; i < results.length; i++) {
                         var oid = results[i].get("orderId");
@@ -51,7 +51,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                         if(results[i].get("state") == "pending"){
                             $scope.userPendingOrder[oid] = results[i];
                         }else{
-                            $scope.allCompletedOrder.push(results[i]);
+                            $scope.allCompletedOrder[oid] = results[i];
                         }
                     }
                 });
@@ -77,6 +77,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
 
         }
         else{
+            addOverLay();
             $mdDialog.show({
                 templateUrl: 'views/userDetails.html',
                 controller: 'detailsModalController',
@@ -89,11 +90,11 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                         $rootScope.tableId = $rootScope.tableIdInput;
                         $scope.tableId = $rootScope.tableId;
                         $cookieStore.put("tableId",$scope.tableId);
-
+                        removeOverLay();
                     }
                 }, function() {
                     //$scope.tableId = Math.random();
-                    //$scope.getDetail();
+                    $scope.getDetail();
                 });
         }
         if(!uid){
@@ -122,7 +123,8 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
                     if(m.receiverId == $scope.userId && (m.action == "complete" || m.action == "cancelled")){
 
                         delete $scope.userPendingOrder[m.orderId];
-                        $scope.allCompletedOrder.push(m);
+                        //$scope.allCompletedOrder.push(m);
+                        $scope.allCompletedOrder[m.orderId] = m;
                         $cookieStore.put("userPendingOrder", $scope.userPendingOrder);
                         $cookieStore.put("allCompletedOrder", $scope.allCompletedOrder);
                         console.log($scope.allCompletedOrder);
@@ -147,9 +149,10 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
         var query = new Parse.Query(MenuObject);
 
         query.equalTo("kitchenid", $scope.kitchenid);
+        console.log($scope.kitchenid,"kid");
         query.first({
             success: function(data) {
-                // The object was retrieved successfully.
+                console.log(data);
                 var menu = data.get("data");
                 $scope.$apply(function(){
                     $scope.userMenu = menu;
@@ -281,6 +284,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     }
     else{
         removeCSS();
+
         $rootScope.kitchenid = $cookieStore.get("kitchenid");
         $scope.kitchenid = $rootScope.kitchenid;
         //$scope.userId = $cookieStore.get("userId");
@@ -336,7 +340,7 @@ app.controller('userMenuController',function($scope,$http,$rootScope,$mdDialog,$
     };
     $scope.clearCompleted = function () {
         $cookieStore.remove("allCompletedOrder");
-        $scope.allCompletedOrder = [];
+        $scope.allCompletedOrder = {};
     };
 });
 app.controller('detailsModalController',function($scope,$mdDialog,$rootScope){
@@ -385,4 +389,10 @@ removeCSS = function(){
     $('body').removeClass('banner');
     $('body').addClass('no-bg');
     $('#overlay').removeClass('overlay');
+};
+addOverLay = function () {
+  $('#overlay').addClass('table-overlay');
+};
+removeOverLay = function () {
+    $('#overlay').removeClass('table-overlay');
 };

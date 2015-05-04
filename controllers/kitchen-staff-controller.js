@@ -151,6 +151,7 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
     };
 
     if(kitchenid){
+
         removeCSS();
         $rootScope.kitchenid = kitchenid;
         $scope.kitchenid = kitchenid;
