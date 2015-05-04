@@ -15,11 +15,13 @@ app.controller('staffMenuController',function($scope, $rootScope, $location, $ht
 
         PUBNUB_demo = PUBNUB.init({
             publish_key: 'pub-c-e14ff346-d55f-47fd-ab96-8012cda81f9d',
-            subscribe_key: 'sub-c-4dde67e6-d2fe-11e4-844b-0619f8945a4f'
+            subscribe_key: 'sub-c-4dde67e6-d2fe-11e4-844b-0619f8945a4f',
+            ssl:true
         });
 
         PUBNUB_demo.subscribe({
             channel: $rootScope.kitchenid,
+            connect: function(){console.log("Connected with SSL")},
             message: function(m){
                 console.log(" M = ",m);
                 $scope.$apply(function () {
